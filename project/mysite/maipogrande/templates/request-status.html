@@ -1,0 +1,56 @@
+{% extends './layout.html' %}
+{% block content %}
+{% load humanize %}
+{% load static %}
+
+
+<div class="row">
+    <div class="col-12">
+        <h2 class ="h2 text-start text-dark">Estados de las solicitudes</h2>
+        <br></br>
+        
+        {% for req in requests %}
+		<div class="card">
+                
+			<div class="card-body">
+
+				<div class="row">
+					<div class="col-sm-12 col-md-6 col-lg-8 col-xl-12">
+						<br></br>
+						
+						<form>
+							<fieldset disabled>
+								<div class="mb-3">
+									<label for="id_offered_product" class="form-label">ID Solicitud</label>
+									<input type="text" id="id_offered_product" class="form-control" placeholder="{{ req.id_offered_product }}">
+								</div>
+
+
+								<div class="mb-3">
+									<label for="offer" class="form-label">Producto ofrecido</label>
+									<input type="text" id="offer" class="form-control" placeholder=" {{ req.offer }}">
+								</div>
+
+								<div class="mb-3">
+									<label for="status" class="form-label">Numero de Cuenta Bancaria</label>
+									<input type="text" id="status" class="form-control" placeholder=" {{ req.status }}">
+								</div>
+
+							</fieldset>
+
+						</form>
+
+						
+
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

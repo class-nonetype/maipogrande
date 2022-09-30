@@ -1,0 +1,173 @@
+{% extends './base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block body%}
+
+<div class="container marketing">
+    <!-- Three columns of text below the carousel -->
+
+
+  {% if request.user.is_authenticated %}
+  <div class="row">
+    <div class="col-lg-4">
+      <img class="rounded-circle" src="{% static 'img/module-auction.png' %}" alt="" width="140" height="140">
+      <h2>Modulo 1</h2>
+      <p>
+        Como empresa Maipo Grande, agrupamos empresas dedicadas a la producción de frutas en la zona metropolitana
+        sur. Con la misión de facilitar la comercialización de los productos de sus diferentes clientes en el
+        mercado extranjero y local.
+      </p>
+      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+    </div><!-- /.col-lg-4 -->
+
+    <div class="col-lg-4">
+      <img class="rounded-circle" src="{% static 'img/module-data.png' %}" alt="" width="140" height="140">
+      <h2>Modulo 2</h2>
+      <p>
+        Proximamente se implementaran funciones para facilitar aun mas la interaccion de los datos.
+        Con la mision de hacer un sistema mas eficiente para los diversos procesos de los usuarios.
+          
+      </p>
+      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+    </div><!-- /.col-lg-4 -->
+    
+    <div class="col-lg-4">
+      <img class="rounded-circle" src="{% static 'img/module-transport.png' %}" alt="" width="140" height="140">
+      <h2>Modulo 3</h2>
+      <p>
+        Se disponen de transportes habilitados para envios al extranjero o locales
+        ( El precio varia segun la competencia )
+      </p>
+      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+    </div><!-- /.col-lg-4 -->
+    {% endif %}
+
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7" id="about-us">
+        <h2 class="featurette-heading">Quienes somos <span class="text-muted"> </span></h2>
+        <p class="lead">
+          La empresa Maipo Grande, agrupa empresas dedicadas a la producción de frutas en la zona metropolitana
+          sur. La misión de la empresa es facilitar la comercialización de los productos de sus diferentes clientes en el
+          mercado extranjero y local.
+        </p>
+      </div>
+      <div class="col-md-5">
+        <img class="featurette-image img-fluid mx-auto" src="{% static 'img/about-us.png' %}" alt="">
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading">Eficiente <span class="text-muted">Véalo por usted mismo</span></h2>
+        <p class="lead">
+          Nuestro sistema de información, permite integrar los procesos de gestión de
+          contratos, procesos de venta al extranjero, procesos de ventas locales y subastas de trasportes. De esta
+          manera se logra facilitar el flujo de información entre los diferentes clientes de la organización, otorgándoles la
+          posibilidad de estar en todo momento informado del estado de sus productos y del proceso de venta.
+        </p>
+      </div>
+      <div class="col-md-5 order-md-1">
+        <img class="featurette-image img-fluid mx-auto" src="{% static 'img/efficiency.png' %}" alt="">
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Usuarios <span class="text-muted"> </span></h2>
+        <p class="lead">
+          Cada Usuario tiene un acceso de acuerdo a sus funciones para agilizar la toma de decisiones y
+          la ejecución de la cadena de procesos que se producen cada vez que hay una venta. Considerando la
+          seguridad y correctitud de los datos, además de la disponibilidad de la información y la consistencia.
+        </p>
+      </div>
+      <div class="col-md-5">
+        <img class="featurette-image img-fluid mx-auto" src="{% static 'img/users-account.png' %}" alt="">
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-12">
+        <h2 class="featurette-heading">Localízanos <span class="text-muted"> </span></h2>
+        <br>
+      </div>
+    </div>
+
+    <div class="row featurette">
+      <div class="col-md-12 order-md-1">
+        <div class="map-holder">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.7001990865106!2d-70.62595598423722!3d-33.43105970390454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c587da2eda0f%3A0x2f94c05135b109d8!2sAv.%20Providencia%20666%2C%20Providencia%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses-419!2scl!4v1621835274713!5m2!1ses-419!2scl"
+            frameborder="0"
+            style="border:0"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+                
+          <style>
+            .map-holder {
+              position: relative;
+              padding-bottom: 30%;
+              height: 0;
+              overflow: hidden;
+            }
+                  
+            .map-holder iframe {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100% !important;
+              height: 100% !important;
+            }
+          </style>
+        </div>
+      </div>
+    </div>
+
+      
+
+    <hr class="featurette-divider">
+    <div class="row featurette">
+      <div class="col-md-12 order-md-1">
+        <div class="card"  id="contact-form">
+          <div class="card-body">
+
+            <form class="form" action="" method="POST">
+              <div class="form-group">
+                <h2 class="featurette-heading">Contactanos <span class="text-muted"> </span></h2>
+                <br></br>
+                {% csrf_token %}
+                {{ form.as_p }}
+
+
+                <div class="d-grid gap-2 col-6 mx-auto">
+                  <form>
+                    <button class="btn btn-primary btn-danger btn-lg text-white"  type="submit" id="submit" href="#">Enviar</button>
+                  </form>
+                </div>
+
+                <br></br>
+              </div>
+            </form> 
+          </div>
+        </div> <!-- /#contact -->
+      </div>
+    </div>
+
+
+    <!-- /END THE FEATURETTES -->
+
+</div><!-- /.container -->
+{% endblock %}

@@ -1,0 +1,227 @@
+{% extends './feed.html' %}
+
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="row">
+    <h1>Perfil</h1>
+    <br></br>
+    <br></br>
+    <br></br>
+
+    <div class="table-responsive py-4">
+
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-12">
+            <h2 class="h2 text-center">Usuario</h2>
+            <br></br>
+
+            <div class="card">
+                <br></br>
+                    
+                <div class="card-body">
+                    <div>
+                        <div class="card-body">
+                            <img class="rounded-circle" src="{{ user.profile.image.url }}" alt="" width="60" height="60">
+                        </div>
+                        <div class="card-body">
+                            <h2 class ="h2" id="username" class="text-start text-light">Publicaciones</h2>
+                            <p>{{ user.posts.count }}</p>
+                        </div>
+                        
+                        <div>
+                            <h2 class ="h2" id="username" class="text-start text-light">Seguidores</h2>
+
+                            <p>{{ user.profile.followers.count }}</p>
+                        
+                        </div>
+                        <div>
+                            <h2 class ="h2" id="username" class="text-start text-light">Seguidos</h2>
+                            <p>{{ user.profile.following.count }}</p>
+                        </div>
+
+                        {% if request.user.is_authenticated %}
+                        {% if user.username != request.user.username %}
+                            {% if user not in request.user.profile.following %}
+                            <div>
+                                <a class="btn btn-outline-warning btn-lg" href="{% url 'follow' user %}" role="button">Seguir</a>
+
+                            </div>
+
+                            {% else %}
+
+                            <div>
+                                <a class="btn btn-outline-danger btn-lg" href="{% url 'unfollow' user %}" role="button">Dejar de seguir</a>
+
+                            </div>
+
+                            {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-12">
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <h2 class="h2 text-center">Informacion personal</h2>
+            <br></br>
+
+            <div class="card">
+                <br></br>
+
+                
+                <div class="card-body">
+
+                    <div class="table-responsive py-4">
+                        <table class="table table-warning"> <!-- warning, info, success, primary, danger,-->
+                            <thead>
+                              <tr class="table-dark">
+                                <th scope="col">#</th>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">E-mail</th>
+
+                                <th scope="col">Tipo de Usuario</th>
+
+
+                                <th scope="col">Nombres</th>
+                                <th scope="col">Apellidos</th>
+
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="row">1</th>
+                                <td> {{ user.username }} </td>
+                                <td> {{ user.email }} </td>
+                                <td> {{ user.type }} </td>
+                                <td> {{ user.first_name }} </td>
+                                <td> {{ user.last_name }} </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="col-sm-12 col-md-6 col-lg-8 col-xl-12">
+
+        <h2 class ="h2" class="text-start text-light">Publicaciones</h2>
+        <br></br>
+        
+        {% for post in posts %}
+            <div class="table-responsive py-4">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+
+                        <tr>
+                            <div class="container-article">
+                                
+                                <div>
+                                    <h2 class ="h2" id="username" class="text-start text-light"><a href="{% url 'profile' post.user.username %}"></a></h2>
+                                    <i class="clock"></i>
+                                    <time data-time="#">{{ post.timestamp|naturaltime }}</time>
+
+
+
+                                    <div class="card bg-dark text-white">
+                                        <img class="card-img" src="..." alt="Card image">
+                                        <div class="card-img-overlay">
+                                          <h5 class="card-title">Card title</h5>
+                                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                          <p class="card-text">Last updated 3 mins ago</p>
+                                        </div>
+                                    </div>
+      
+
+
+
+                              
+                                    <div class="card">
+                                        <div class="post">
+                                            <div class="card-item">
+                                                <div class="d-flex flex-row-start">
+                                                    <div class="col-4">
+                                                        {% if post.image %}
+                                                        <img class="img-fluid mx-auto" src="{{ post.image.url }}" alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-item">
+                                                <div class="d-flex flex-row-reverse">
+                                                    <div class="col-12">
+                                                        <h6 class="h6 text-start">Producto <span class="text-muted">{{ post.title }}</span></h6>
+                                                        <h6 class="h6 text-start">Precio <span class="text-muted"> $ {{ post.price }}</span></h6>
+                                                        <h6 class="h6 text-start">Kilogramos disponibles <span class="text-muted">{{ post.quantity }}</span></h6>
+                                                        <h6 class="h6 text-start">Descripcion <span class="text-muted">{{ post.description }}</span></h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br></br>
+
+                                            <div class="d-flex flex-row-reverse">
+                                                <form>
+                                                    {% if request.user.is_authenticated %}
+                                                    <button class="btn btn-outline-success btn-lg" type="submit"formaction="{% url 'profile' request.user.username %}">Ver ofertas</button>
+
+                                                    {% else %}
+                                                    <button class="btn btn-outline-success btn-lg" type="submit"formaction="{% url 'profile' post.user.username %}">Ver ofertas</button>
+                                                    {% endif %}
+                                            
+                                                </form>
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+
+    
+
+
+</div>
+
+{% endblock %}

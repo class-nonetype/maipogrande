@@ -1,0 +1,38 @@
+from rest_framework import serializers
+
+
+from .models import (
+    CustomUser, ProductRequest, Profile, Relationship, Post, BankAccount, ProductRequestStatus
+)
+
+class CustomUserSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = CustomUser
+       fields = '__all__'
+
+
+class ProductRequestSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = ProductRequest
+       fields = '__all__'
+
+class ProfileSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = Profile
+       fields = '__all__'
+
+
+class PostSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = Post
+       fields = '__all__'
+
+class BankAccountSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = BankAccount
+       fields = '__all__'
+
+class ProductRequestStatusSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = ProductRequestStatus
+       fields = '__all__'

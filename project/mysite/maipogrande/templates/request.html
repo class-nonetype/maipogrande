@@ -1,0 +1,132 @@
+{% extends './feed.html' %}
+
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+{% if request.user.is_authenticated %}
+<div class="row">
+
+
+    <div class="col-12">
+        <h2 class ="h2 text-start text-dark">Solicitudes</h2>
+        <hr></hr>
+        
+        {% for req in requests %}
+        <div class="table-responsive py-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                    
+                <tbody>
+
+                    <tr>
+                        <div class="container-article">
+                                
+                            <div>
+
+                                <div class="card text-white bg-dark mb-3" style="max-width: 100%;">
+                                    <div class="card-header">
+                                        <i class="clock"></i>
+                                        <time data-time="#">{{ req.timestamp|naturaltime }}</time>
+                                        <hr></hr>
+
+                                        <a class="btn btn-outline-warning" href="{% url 'profile' req.user.username %}" role="button">@ {{ req.user.username }}</a>
+                                        <hr></hr>
+                                        
+                                        <h2 class="h2 text-start text-light">Producto <span class="text-muted">{{ req.title }}</span></h2>
+                                    </div>
+                                        
+                                    <div class="card-body">
+
+                                        <div class="row">
+                                                
+                                            <div class="col-sm">
+                                                <h6 class="h6 text-start">Kilogramos solicitados <span class="text-muted">{{ req.quantity }}</span></h6>
+                                                <h6 class="h6 text-start">Descripcion <span class="text-muted">{{ req.description }}</span></h6>
+                                                <h6 class="h6 text-start">Fecha solicitada <span class="text-muted">{{ req.requested_date }}</span></h6>
+                                                <h6 class="h6 text-start">Requiere de cuidados de temperatura <span class="text-muted">{{ req.temperature_care }}</span></h6>
+
+
+
+                                                {% if request.user.type == "PRODUCTOR" %}
+
+                                                <div class="card text-white bg-dark mb-3" id="offer-product">
+                    
+                                                    <div class="card-body">
+                                            
+                                                        <div class="row">
+                                                            <div class="col-sm-12 col-md-6 col-lg-8 col-xl-12">
+                                                                <br></br>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex flex-row-reverse">
+                                                    <div class="input-group">
+                                                        <select class="form-select" id="product-select" aria-label="Selecciona un producto">
+                                                            <option selected>Selecciona un producto</option>
+                                                            {% for product in posts %}
+                                                            <option value="{{ product.id }}">{{ product.title }}</option>
+                                                            {% endfor %}
+                                                        </select>
+
+
+
+                                                        <script type="text/javascript">
+
+                                                            function sendSelectedProduct(){
+                                                                var productSelected = document.getElementById("product-select");
+                                                                var valueProductSelected = productSelected.value;
+
+                                                                var textproductSelected = productSelected.options[productSelected.selectedIndex].text
+                                                                
+                                                                var url = "{% url 'offer_product' 1 %}";
+                                                                alert(valueProductSelected);
+                                                                    
+                                                                document.location.href = url.replace('1', valueProductSelected);
+
+
+
+                                                            };
+
+                                                        </script>
+
+                                                         <button
+                                                            class="btn btn-outline-success btn-lg"
+                                                            type="submit"
+                                                            id="btn-offer-product"
+                                                            onclick="sendSelectedProduct()">
+                                                            Ofrecer
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                
+                                                {% elif request.user.type == "CLIENTE INTERNO" or request.user.type == "CLIENTE EXTERNO"%}
+
+                                                <div class="d-flex flex-row-reverse">
+                                                    <a class="btn btn-outline-success btn-lg" id="btn-offer-product" type="submit" href="{% url 'client_request_status' req.id_product_request %}">Ver estado de la solicitud #{{ req.id_product_request }}</a>
+                                                </div>
+
+                                                {% endif %}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
