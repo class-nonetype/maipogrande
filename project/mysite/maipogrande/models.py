@@ -156,7 +156,7 @@ class Contract(models.Model):
 
 class BankAccount(models.Model):
 	id_bank_account = models.AutoField(primary_key = True, editable = False)
-	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name = 'bank')
+	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name = 'banks')
 	bank_name = models.CharField(max_length = 50, choices = BANK_NAMES, default = '')
 	type_bank_account = models.CharField(max_length = 25, choices = TYPE_BANK_ACCOUNT, default = '')
 	bank_account_number = models.IntegerField(validators = [MinValueValidator(10000000), MaxValueValidator(999999999999)])

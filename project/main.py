@@ -64,7 +64,7 @@ PROPERTY = {
 for value in PROPERTY.values():
 
     if SYSTEM == 'Windows':
-        os.system(f'''python {value['manage']} runserver''')
+        os.system(f'''python {value['manage']} runserver 0:8000''')
     
     elif SYSTEM == 'Linux':
-        os.system(f'''python3 "{value['manage']}" runserver''')
+        os.system(f'''python3 "{value['manage']}" runserver 0:8000''')

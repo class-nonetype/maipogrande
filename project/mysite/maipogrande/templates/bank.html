@@ -6,10 +6,22 @@
 
 <div class="row">
     <div class="col-12">
-        <h2 class ="h2 text-start text-dark">Cuentas disponibles</h2>
-        <br></br>
         
+
+		{% if banks.count > 0 %}
+
+			<h2 class ="h2 text-start text-dark">Cuentas disponibles</h2>
+
+		{% else %}
+
+			<h2 class ="h2 text-start text-dark">No hay cuentas registradas</h2>
+
+		{% endif %}
+
+        <br></br>
+
         {% for bank in banks %}
+
 		<div class="card">
                 
 			<div class="card-body">
@@ -19,8 +31,9 @@
 						<br></br>
                         <legend>{{ bank.type_bank_account }}</legend>
 						
-						<form>
+						<div class = "form-group">
 							<fieldset disabled>
+								
 								<div class="mb-3">
 									<label for="bank_name" class="form-label">Nombre del Banco</label>
 									<input type="text" id="bank_name" class="form-control" placeholder="{{ bank.bank_name }}">
@@ -41,19 +54,17 @@
 									<label for="owner_full_name" class="form-label">Nombre completo del titular</label>
 									<input type="text" id="owner_full_name" class="form-control" placeholder=" {{ bank.owner_full_name }}">
 								</div>
+							
 							</fieldset>
+
 							<a class="btn btn-primary btn-danger btn-md px-5" type="submit" href="{% url 'delete_bank_account' bank.id_bank_account %}">
 								<i class="fa-solid fa-trash"></i>
 								Eliminar cuenta 
 							</a>
-						</form>
 
-						
-
+						</div>
 					</div>
-
 				</div>
-
 			</div>
 		</div>
         {% endfor %}
@@ -75,12 +86,18 @@
 				<div class="row">
 					<div class="col-sm-12 col-md-6 col-lg-8 col-xl-12">
 						<br></br>
-                        <legend></legend>
+
+
+
 						<form action="" method="POST" enctype="multipart/form-data">
 							{% csrf_token %}
+
 							<div class="col-sm-12 col-md-6 col-lg-8 col-xl-12">
+
 								<div class="table-responsive py-4">
+
 									<table class="table table-striped">
+
 										<thead>
 											<tr>
 												<th></th>
@@ -91,14 +108,20 @@
 					
 											<tr>
 												{{ form.as_p }}
+												<br></br>
+
 					
 												<div class="d-grid gap-2 col-6 mx-auto">
+
 													<button class="btn btn-primary btn-danger btn-lg text-white"  type="submit" href="#">
 														<i class="fa-solid fa-building-columns"></i>
 														Agregar cuenta bancaria
 													</button>
+
 												</div>
-					
+
+												<br></br>
+
 											</tr>
 										</tbody>
 									</table>
@@ -106,13 +129,10 @@
 							</div>
 						</form>
 					</div>
-
 				</div>
-
 			</div>
 		</div>
     </div>
-
 </div>
 
 {% endblock %}

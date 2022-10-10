@@ -9,8 +9,11 @@
     <!-- Three columns of text below the carousel -->
 
 
-  {% if request.user.is_authenticated %}
+  
   <div class="row">
+
+    {% if request.user.is_authenticated %}
+    
     <div class="col-lg-4">
       <img class="rounded-circle" src="{% static 'img/module-auction.png' %}" alt="" width="140" height="140">
       <h2>Modulo 1</h2>
@@ -44,8 +47,6 @@
     </div><!-- /.col-lg-4 -->
     {% endif %}
 
-
-    <!-- START THE FEATURETTES -->
 
     <hr class="featurette-divider">
 
@@ -145,29 +146,32 @@
           <div class="card-body">
 
             <form class="form" action="" method="POST">
+
               <div class="form-group">
                 <h2 class="featurette-heading">Contactanos <span class="text-muted"> </span></h2>
                 <br></br>
                 {% csrf_token %}
+
                 {{ form.as_p }}
 
 
                 <div class="d-grid gap-2 col-6 mx-auto">
                   <form>
-                    <button class="btn btn-primary btn-danger btn-lg text-white"  type="submit" id="submit" href="#">Enviar</button>
+                    <button class="btn btn-primary btn-danger btn-lg text-white" type="submit" id="submit" href="#">
+                      <i class="icon fa-solid fa-paper-plane"></i>
+                      Enviar
+                    </button>
                   </form>
                 </div>
 
                 <br></br>
               </div>
             </form> 
+
           </div>
-        </div> <!-- /#contact -->
+        </div>
       </div>
     </div>
-
-
-    <!-- /END THE FEATURETTES -->
-
-</div><!-- /.container -->
+  </div>
+</div>
 {% endblock %}

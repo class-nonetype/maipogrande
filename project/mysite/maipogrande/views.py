@@ -60,10 +60,19 @@ def post(request):
 	return render(request, 'post.html', {'form' : form })
 
 @login_required
-def bank_account(request, username = None):
+def bank_account(request):
+	#current_user = request.user
 	current_user = get_object_or_404(CustomUser, pk = request.user.pk)
 
-	banks = BankAccount.objects.all()
+
+
+	user = CustomUser.objects.get(username=current_user)
+
+
+	#banks = BankAccount.objects.get(user=user)
+	banks = BankAccount.objects.filter(user=user)
+
+
 	if request.method == 'POST':
 		form = BankAccountForm(request.POST)
 		if form.is_valid():
@@ -73,7 +82,16 @@ def bank_account(request, username = None):
 			return redirect('bank')
 	else:
 		form = BankAccountForm()
-	return render(request, 'bank.html', {'form' : form , 'banks' : banks})
+
+	return render(
+		request, 'bank.html',
+		{
+			'user' : user,
+			'banks' : banks,
+			'form' : form,
+		}
+	)
+
 
 @login_required
 def delete_bank_account(request, id_bank_account = None):
