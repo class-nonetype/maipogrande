@@ -3,16 +3,21 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import (
-    CustomUser, ProductRequest, Profile, Relationship, Post, BankAccount, ProductRequestStatus
+    CustomUser, ProductRequest, Profile, Relationship, Post, BankAccount, ProductRequestStatus, Transport
 )
 from .forms import (
-    BankAccountForm, ContactForm, ProductRequestForm, SignUpForm, PostForm
+    BankAccountForm, ContactForm, ProductRequestForm, SignUpForm, PostForm, TransportForm
 )
 
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
+'''
+---------------
+Vista principal
+---------------
+'''
 def home(request):
 	if request.method == 'POST':
 		form = ContactForm(request.POST)
@@ -28,9 +33,22 @@ def home(request):
  
 	return render(request, 'home.html', context)
 
+
+'''
+-------------------------
+Vista de inicio de sesion
+-------------------------
+'''
 def login(request):
     return render(request, 'login.html')
 
+
+'''
+--------------------------
+Vista de perfil de usuario
+--------------------------
+'''
+@login_required
 def profile(request, username = None):
 	current_user = request.user
 
@@ -45,8 +63,14 @@ def profile(request, username = None):
   
 	return render(request, 'profile.html', {'user':user, 'posts':posts})
 
+
+'''
+--------------------------------
+Vista de publicacion de producto
+--------------------------------
+'''
 @login_required
-def post(request):
+def post_product(request):
 	current_user = get_object_or_404(CustomUser, pk=request.user.pk)
 	if request.method == 'POST':
 		form = PostForm(request.POST, request.FILES)#eliminar request.FILES si hay problema
@@ -57,17 +81,44 @@ def post(request):
 			return redirect('feed')
 	else:
 		form = PostForm()
-	return render(request, 'post.html', {'form' : form })
+	return render(request, 'post-product.html', {'form' : form })
 
+
+'''
+----------------------------------
+Vista de publicacion de transporte
+----------------------------------
+'''
+@login_required
+def post_transport(request):
+	current_user = get_object_or_404(CustomUser, pk = request.user.pk)
+
+	if request.method == 'POST':
+
+		form = TransportForm(request.POST, request.FILES)
+
+		if form.is_valid():
+			post = form.save(commit=False)
+			post.user = current_user
+			post.save()
+
+			return redirect('feed')
+	else:
+		form = TransportForm()
+	return render(request, 'post-transport.html', {'form' : form })
+
+
+'''
+---------------------------
+Vista de la cuenta bancaria
+---------------------------
+'''
 @login_required
 def bank_account(request):
 	#current_user = request.user
 	current_user = get_object_or_404(CustomUser, pk = request.user.pk)
 
-
-
 	user = CustomUser.objects.get(username=current_user)
-
 
 	#banks = BankAccount.objects.get(user=user)
 	banks = BankAccount.objects.filter(user=user)
@@ -93,12 +144,23 @@ def bank_account(request):
 	)
 
 
+'''
+------------------------------------------
+Vista de la eliminacion de cuenta bancaria
+------------------------------------------
+'''
 @login_required
 def delete_bank_account(request, id_bank_account = None):
 	bank = BankAccount.objects.filter(pk=id_bank_account)
 	bank.delete()
 	return redirect('bank')
 
+
+'''
+------------------------------
+Vista de solicitud de producto
+------------------------------
+'''
 @login_required
 def product_request(request):
 	current_user = get_object_or_404(CustomUser, pk=request.user.pk)
@@ -113,35 +175,96 @@ def product_request(request):
 		form = ProductRequestForm()
 	return render(request, 'product-request.html', {'form' : form })
 
+
+'''
+------------------------------------
+Vista de las solicitudes de producto
+------------------------------------
+'''
 @login_required
 def client_request(request):
 
 	current_user = request.user
+	
 
 	if current_user.type == 'PRODUCTOR':
 
 		requests = ProductRequest.objects.all()
-		posts = current_user.posts.all()
-	
+		products = current_user.posts.all()
+
+
+		paginator = Paginator(requests, 1)
+		page = request.GET.get('page')
+		requests= paginator.get_page(page)
+
 	
 	elif current_user.type == 'CLIENTE EXTERNO' or current_user.type == 'CLIENTE INTERNO':
 		#requests = current_user.posts.all()
 		requests = ProductRequest.objects.filter(user = current_user.id)
-		posts = current_user
+		products = current_user
 	
 	else:
 		pass
 
-	return render(request, 'request.html', {'posts' : posts, 'requests' : requests})
+	return render(request, 'request.html', {'products' : products, 'requests' : requests})
 
+
+'''
+---------------------------------------------------
+Vista del estado de solicitud por parte del cliente
+---------------------------------------------------
+'''
 @login_required
 def client_request_status(request, id_offered_product):
-	requests = ProductRequestStatus.objects.filter(id_offered_product = id_offered_product)
+	print(id_offered_product)
+
+	requests = ProductRequestStatus.objects.filter(pk = id_offered_product)
+	#requests = ProductRequestStatus.objects.all()
+	print(requests)
 
 	return render(request, 'request-status.html', {'requests' : requests})
 
 
+'''
+----------------------------------------------------------------
+Vista del proceso de venta de los productos ofrecidos
+----------------------------------------------------------------
+'''
+@login_required
+def decline_product_offer(request, id_offered_product = None):
 
+	status = 'RECHAZADO'
+
+	product_offer = ProductRequestStatus.objects.get(pk = id_offered_product)
+	product_offer.status = status
+	product_offer.save()
+
+	return redirect('request')
+
+@login_required
+def accept_product_offer(request, id_offered_product = None):
+	status = 'APROBADO'
+
+	product_offer = ProductRequestStatus.objects.get(pk = id_offered_product)
+	product_offer.status = status
+	product_offer.save()
+
+	return redirect('request')
+
+@login_required
+def delete_product_offer(request, id_offered_product = None):
+
+	product_offer = ProductRequestStatus.objects.filter(pk = id_offered_product)
+	product_offer.delete()
+
+	return redirect('request')
+
+
+'''
+--------------------------------
+Vista de los productos ofrecidos
+--------------------------------
+'''
 @login_required
 def offer_product(request, id_offered_product = None):
 	status = 'PENDIENTE'
@@ -150,19 +273,63 @@ def offer_product(request, id_offered_product = None):
 
 	product = ProductRequestStatus(
 		id_offered_product = id_offered_product,
-		offer = name_offered_product,
-		status = status
+		offer = str(name_offered_product),
+		status = str(status)
 	)
 	product.save()
 
 	return redirect('request')
 
+'''
+----------------------------------------------------------------
+Vista de los transportes publicados por el usuario Transportista
+----------------------------------------------------------------
+'''
+@login_required
+def transport(request):
+	current_user = get_object_or_404(CustomUser, pk = request.user.pk)
+
+
+	if current_user.type == 'TRANSPORTISTA':
+
+
+		user = CustomUser.objects.get(username = current_user)
+
+
+		#banks = BankAccount.objects.get(user=user)
+		transports = Transport.objects.filter(user = user)
+
+
+		return render(
+			request, 'transport.html',
+			{
+				'user' : user,
+				'transports' : transports,
+			}
+		)
+	
+	else:
+		pass
+
+
+'''
+-----------------------------------------------
+Vista de las publicaciones del producto creadas
+-----------------------------------------------
+'''
+@login_required
 def feed(request):
 	posts = Post.objects.all()
 
 	context = { 'posts': posts}
 	return render(request, 'feed.html', context)
 
+
+'''
+----------------------------
+Vista de registro de usuario
+----------------------------
+'''
 def register(request):
 	if request.method == 'POST':
 		form = SignUpForm(request.POST)
@@ -170,7 +337,7 @@ def register(request):
 		if form.is_valid():
 			form.save()
 
-			return redirect('feed')
+			return redirect('home')
 	else:
 		form = SignUpForm()
 
@@ -178,7 +345,11 @@ def register(request):
 	return render(request, 'register.html', context)
 
 
-
+'''
+-------------------------------------
+Vista del inicio de sesion de usuario
+-------------------------------------
+'''
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -200,6 +371,11 @@ def user_login(request):
         return render(request, 'login.html')
 
 
+'''
+----------------------------------------------------------------
+Vista de las relaciones que pueden tener los usuarios
+----------------------------------------------------------------
+'''
 def follow(request, username):
 	current_user = request.user
 	to_user = CustomUser.objects.get(username=username)
@@ -218,19 +394,21 @@ def unfollow(request, username):
 
 
 
-
+'''
+--------
+API REST
+--------
+'''
 from rest_framework import viewsets
 
 from .serializers import (
 	CustomUserSerializer, ProductRequestSerializer, ProfileSerializer,
-	PostSerializer, BankAccountSerializer, ProductRequestStatusSerializer
+	PostSerializer, BankAccountSerializer, ProductRequestStatusSerializer, TransportSerializer
 )
-
 
 class CustomUserViewSet(viewsets.ModelViewSet):
 	queryset = CustomUser.objects.all()
 	serializer_class = CustomUserSerializer
-
 
 class ProductRequestViewSet(viewsets.ModelViewSet):
 	queryset = ProductRequest.objects.all()
@@ -250,4 +428,8 @@ class BankAccountViewSet(viewsets.ModelViewSet):
 
 class ProductRequestStatusViewSet(viewsets.ModelViewSet):
 	queryset = ProductRequestStatus.objects.all()
-	serializer_class = ProductRequestStatus
+	serializer_class = ProductRequestStatusSerializer
+
+class TransportViewSet(viewsets.ModelViewSet):
+	queryset = Transport.objects.all()
+	serializer_class = TransportSerializer

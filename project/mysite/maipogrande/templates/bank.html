@@ -51,13 +51,18 @@
 								</div>
 
 								<div class="mb-3">
+									<label for="bank_amount" class="form-label">Saldo disponible</label>
+									<input type="text" id="bank_amount" class="form-control" placeholder="$ {{ bank.bank_amount }}">
+								</div>
+
+								<div class="mb-3">
 									<label for="owner_full_name" class="form-label">Nombre completo del titular</label>
 									<input type="text" id="owner_full_name" class="form-control" placeholder=" {{ bank.owner_full_name }}">
 								</div>
 							
 							</fieldset>
 
-							<a class="btn btn-primary btn-danger btn-md px-5" type="submit" href="{% url 'delete_bank_account' bank.id_bank_account %}">
+							<a class="btn btn-primary btn-danger btn-md px-5" type="submit" href="{% url 'delete_bank_account' bank.id_bank_account %}" id="btn-delete-bank-account">
 								<i class="fa-solid fa-trash"></i>
 								Eliminar cuenta 
 							</a>
@@ -113,7 +118,7 @@
 					
 												<div class="d-grid gap-2 col-6 mx-auto">
 
-													<button class="btn btn-primary btn-danger btn-lg text-white"  type="submit" href="#">
+													<button class="btn btn-primary btn-danger btn-lg text-white"  type="submit" href="#" id="btn-add-bank-account">
 														<i class="fa-solid fa-building-columns"></i>
 														Agregar cuenta bancaria
 													</button>

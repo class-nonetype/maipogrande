@@ -107,17 +107,30 @@
                                         <input type="text" id="last_name" class="form-control" placeholder=" {{ user.last_name }}">
                                     </div>
 
-                                </fieldset>
+                                    
 
+                                </fieldset>
                                 
-                                  
-                            
-                                <!-- <div class="d-grid gap-2 col-6 mx-auto">
-                                    <button class="btn btn-primary btn-danger btn-lg text-white"  type="submit" formaction="{% url 'bank' %}">
-                                        <i class="fa-solid fa-building-columns"></i>
-                                        Ver cuenta bancaria
+                                {% if user.username == request.user.username %}
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Contraseña para la aplicacion de escritorio</label>
+                                    <input type="text" id="password" value="{{ user.password }}" class="form-control" placeholder=" {{ user.password }}" readonly>
+                                </div>
+                                <div class="d-flex flex-row-reverse">
+                                    <script>
+                                        function copyToClipboard() {
+                                            // Create a "hidden" input
+                                            var textBox = document.getElementById("password");
+                                            textBox.select();
+                                            document.execCommand("copy");
+                                        }
+                                    </script>
+                                    <button class="btn btn-outline-success btn-lg" type="submit"onclick="copyToClipboard()">
+                                        Copiar contraseña
                                     </button>
-                                </div> -->
+                                </div>
+                                {% endif %}
+
                             </form>
 
                         </div>
@@ -180,12 +193,18 @@
 
                                                 <div class="d-flex flex-row-reverse">
                                                     <form>
-                                                        {% if request.user.is_authenticated %}
+                                                        {% if user.username == request.user.username %}
                                                         <button class="btn btn-outline-success btn-lg" type="submit"formaction="{% url 'profile' request.user.username %}">Ver ofertas</button>
         
-                                                        {% else %}
-                                                        <button class="btn btn-outline-success btn-lg" type="submit"formaction="{% url 'profile' post.user.username %}">Ver ofertas</button>
+                                                        {% endif %}
+
+                                                        {% if request.user.type == "CLIENTE INTERNO" %}
                                                         
+                                                        <button class="btn btn-outline-success btn-lg" type="submit"formaction="{% url 'profile' post.user.username %}">Ofrecer oferta</button>
+
+                                                        {% elif request.user.type == "CLIENTE EXTERNO" %}
+                                                        
+                                                        <button class="btn btn-outline-success btn-lg" type="submit"formaction="{% url 'profile' post.user.username %}">Ofrecer oferta</button>
                                                         {% endif %}
                                                     </form>
                                                 </div>

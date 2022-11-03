@@ -6,55 +6,16 @@
 {% block body%}
 
 <div class="container marketing">
-    <!-- Three columns of text below the carousel -->
-
-
   
   <div class="row">
-
-    {% if request.user.is_authenticated %}
-    
-    <div class="col-lg-4">
-      <img class="rounded-circle" src="{% static 'img/module-auction.png' %}" alt="" width="140" height="140">
-      <h2>Modulo 1</h2>
-      <p>
-        Como empresa Maipo Grande, agrupamos empresas dedicadas a la producción de frutas en la zona metropolitana
-        sur. Con la misión de facilitar la comercialización de los productos de sus diferentes clientes en el
-        mercado extranjero y local.
-      </p>
-      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-    </div><!-- /.col-lg-4 -->
-
-    <div class="col-lg-4">
-      <img class="rounded-circle" src="{% static 'img/module-data.png' %}" alt="" width="140" height="140">
-      <h2>Modulo 2</h2>
-      <p>
-        Proximamente se implementaran funciones para facilitar aun mas la interaccion de los datos.
-        Con la mision de hacer un sistema mas eficiente para los diversos procesos de los usuarios.
-          
-      </p>
-      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-    </div><!-- /.col-lg-4 -->
-    
-    <div class="col-lg-4">
-      <img class="rounded-circle" src="{% static 'img/module-transport.png' %}" alt="" width="140" height="140">
-      <h2>Modulo 3</h2>
-      <p>
-        Se disponen de transportes habilitados para envios al extranjero o locales
-        ( El precio varia segun la competencia )
-      </p>
-      <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-    </div><!-- /.col-lg-4 -->
-    {% endif %}
-
 
     <hr class="featurette-divider">
 
     <div class="row featurette">
       <div class="col-md-7" id="about-us">
-        <h2 class="featurette-heading">Quienes somos <span class="text-muted"> </span></h2>
+        <h2 class="featurette-heading">Quiénes somos <span class="text-muted"> </span></h2>
         <p class="lead">
-          La empresa Maipo Grande, agrupa empresas dedicadas a la producción de frutas en la zona metropolitana
+          Maipo Grande agrupa empresas dedicadas a la producción de frutas en la zona metropolitana
           sur. La misión de la empresa es facilitar la comercialización de los productos de sus diferentes clientes en el
           mercado extranjero y local.
         </p>
@@ -100,7 +61,7 @@
     <hr class="featurette-divider">
 
     <div class="row featurette">
-      <div class="col-md-12">
+      <div class="col-md-12" id="locate-us">
         <h2 class="featurette-heading">Localízanos <span class="text-muted"> </span></h2>
         <br>
       </div>
@@ -148,7 +109,7 @@
             <form class="form" action="" method="POST">
 
               <div class="form-group">
-                <h2 class="featurette-heading">Contactanos <span class="text-muted"> </span></h2>
+                <h2 class="featurette-heading">Contáctanos <span class="text-muted"> </span></h2>
                 <br></br>
                 {% csrf_token %}
 
@@ -157,9 +118,17 @@
 
                 <div class="d-grid gap-2 col-6 mx-auto">
                   <form>
-                    <button class="btn btn-primary btn-danger btn-lg text-white" type="submit" id="submit" href="#">
-                      <i class="icon fa-solid fa-paper-plane"></i>
-                      Enviar
+
+                    <button class="btn btn-primary btn-danger btn-lg text-white" type="submit" id="btn-submit" href="#">
+                        
+                      <span class="icon">
+                        <i class="fa-solid fa-paper-plane"></i>
+                      </span>
+
+                      <span class="btn-text">
+                        Enviar
+                      </span>
+
                     </button>
                   </form>
                 </div>

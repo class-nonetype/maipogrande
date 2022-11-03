@@ -2,15 +2,17 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import (
-    Contact, CustomUser, Post, Contract, BankAccount, ProductRequest,
+    Contact, CustomUser, Post, Contract, BankAccount, ProductRequest, Transport,
 
-    USER_TYPE, TYPE_BANK_ACCOUNT, BANK_NAMES, CONTRACT_STATUS, ANSWER
+    USER_TYPE, TYPE_BANK_ACCOUNT, TYPE_TRANSPORT,
+    BANK_NAMES, CONTRACT_STATUS, ANSWER, COUNTRY
 )
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 import datetime
 
+# Formulario de registro de usuario
 class SignUpForm(UserCreationForm):
     
     first_name = forms.CharField(label='Nombres', widget = forms.TextInput(attrs={'class': 'form-control'}))
@@ -24,19 +26,24 @@ class SignUpForm(UserCreationForm):
     	label = 'Selecciona el tipo de usuario a crear',
     	widget = forms.Select(attrs={'class': 'form-control'})
     )
-    
+    country = forms.ChoiceField(
+    	choices = COUNTRY, required = True,
+    	label = 'Selecciona el pais de origen',
+    	widget = forms.Select(attrs = {'class': 'form-control'})
+    )
+
     class Meta:
         model = CustomUser
         fields = UserCreationForm.Meta.fields + (
-            'type', 'email',
-			'username', 'password1', 'password2',
-			'first_name', 'last_name',
+            'type', 'email', 'username', 'password1', 'password2',
+            'country', 'first_name', 'last_name',
         )
     
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
 
 
+# Formulario de publicacion del producto
 class PostForm(forms.ModelForm):
     
     title = forms.CharField(label = 'Titulo', widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ej: Manzana'}), required=True)
@@ -52,6 +59,8 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['title', 'price', 'quantity', 'description', 'image']
 
+
+# Formulario de contacto
 class ContactForm(forms.ModelForm):
     first_name = forms.CharField(label = 'Nombres', widget = forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(label = 'Apellidos', widget = forms.TextInput(attrs={'class': 'form-control'}))
@@ -68,6 +77,7 @@ class ContactForm(forms.ModelForm):
         ]
 
 
+# Formulario de contrato
 class ContractForm(forms.ModelForm):
 
     image = forms.ImageField(label = 'Selecciona la imagen', widget = forms.FileInput(attrs={'class': 'form-control'}))
@@ -81,13 +91,12 @@ class ContractForm(forms.ModelForm):
     	widget = forms.Select(attrs={'class': 'form-control'})
     )
 
-
     class Meta:
         model = Contract
         fields = ['image', 'rut', 'phono', 'issued_date', 'contract_closing_date']
 
 
-
+# Formulario de cuenta bancaria
 class BankAccountForm(forms.ModelForm):
     bank_name = forms.ChoiceField(
         choices = BANK_NAMES, required = True,
@@ -103,6 +112,7 @@ class BankAccountForm(forms.ModelForm):
         label = 'Numero de Cuenta',
         widget = forms.NumberInput(attrs={'class': 'form-control', 'type':'number', 'placeholder' : 'Ej : 11222333'}),
         required=True)
+
     owner_full_name = forms.CharField(label = 'Nombre completo del titular', widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ingresa el nombre completo del titular'}), required=True)
     
     class Meta:
@@ -110,12 +120,8 @@ class BankAccountForm(forms.ModelForm):
         fields = ['bank_name', 'type_bank_account', 'bank_account_number', 'owner_full_name']
 
 
-'''
-CLIENTE EXTERNO
-'''
-
+# Formulario de solicitud del producto
 class ProductRequestForm(forms.ModelForm):
-
 
     title = forms.CharField(label = 'Titulo', widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ej: Manzana'}), required=True)
     description = forms.CharField(label = 'Descripcion', widget = forms.Textarea(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Agrega una descripcion'}), required=True)
@@ -139,7 +145,7 @@ class ProductRequestForm(forms.ModelForm):
         fields = ['title', 'description', 'quantity', 'requested_date', 'temperature_care']
 
 
-
+# Formulario del estado de solicitud del producto
 class ProductRequestStatusForm(forms.ModelForm):
 
     offer = forms.CharField(label = 'Producto ofrecido', widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ej: Manzana'}), required=True)
@@ -162,3 +168,23 @@ class ProductRequestStatusForm(forms.ModelForm):
     class Meta:
         model = ProductRequest
         fields = ['title', 'description', 'quantity', 'requested_date', 'temperature_care']
+
+
+# Formulario de transporte
+class TransportForm(forms.ModelForm):
+    
+    type = forms.ChoiceField(
+        choices = TYPE_TRANSPORT, required = True, label = 'Selecciona el tipo de transporte', widget = forms.Select(attrs={'class': 'form-control'})
+    )
+    patent = forms.CharField(label = 'Patente del transporte', widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ej: RX-GH-35'}), required=True)
+    size = forms.CharField(label = 'Tamaño', widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2,  'placeholder': 'Ej: 16.50m x 4.30m'}), required=True)
+    capacity = forms.IntegerField(
+        label = 'Capacidad de soporte (kg)', max_value = 5000, min_value = 1, widget = forms.NumberInput(attrs={'class': 'form-control', 'type':'number'})
+    )
+    image = forms.ImageField(label = 'Selecciona la imagen', widget = forms.FileInput(attrs={'class': 'form-control'}))
+    refrigeration = forms.ChoiceField(
+        choices = ANSWER, required=True, label = '¿Cuenta con refrigeracion?', widget = forms.Select(attrs={'class': 'form-control'})
+    )
+    class Meta:
+        model = Transport
+        fields = ['type', 'patent', 'size', 'capacity', 'image', 'refrigeration']

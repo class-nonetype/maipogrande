@@ -6,7 +6,14 @@
 
 <div class="row">
     <div class="col-12">
+
+		{% if requests.count > 0 %}
         <h2 class ="h2 text-start text-dark">Estados de las solicitudes</h2>
+
+		{% else %}
+        <h2 class ="h2 text-start text-dark">No hay ninguna oferta por el momento</h2>
+		
+		{% endif %}
         <br></br>
         
         {% for req in requests %}
@@ -32,25 +39,60 @@
 								</div>
 
 								<div class="mb-3">
-									<label for="status" class="form-label">Numero de Cuenta Bancaria</label>
+									<label for="status" class="form-label">Estado de solicitud de producto</label>
 									<input type="text" id="status" class="form-control" placeholder=" {{ req.status }}">
 								</div>
-
 							</fieldset>
 
+							<div class="d-flex justify-content-end">
+							<!-- <div class="d-flex flex-row-reverse"> -->
+							
+								<form class="d-flex px-1">
+									<a class="btn btn-primary btn-success btn-md px-4" type="submit" href="{% url 'accept_product_offer' req.id_offered_product %}" id="btn-accept-product-offer">
+										<span class="icon">
+											<i class="fa-solid fa-xmark"></i>
+										</span>
+
+										<span class="btn-text">
+											Aceptar oferta
+										</span>
+									</a>
+								</form>
+
+
+								<form class="d-flex px-1">
+
+									<a class="btn btn-primary btn-warning btn-md px-4" type="submit" href="{% url 'decline_product_offer' req.id_offered_product %}" id="btn-decline-product-offer">
+										<span class="icon">
+											<i class="fa-solid fa-xmark"></i>
+										</span>
+
+										<span class="btn-text">
+											Rechazar oferta
+										</span>
+									</a>
+								</form>
+							
+
+								<form class="d-flex px-1">
+
+									<a class="btn btn-primary btn-danger btn-md px-4" type="submit" href="{% url 'delete_product_offer' req.id_offered_product %}" id="btn-delete-product-offer">
+										<span class="icon">
+											<i class="fa-solid fa-trash"></i>
+										</span>
+
+										<span class="btn-text">
+											Eliminar oferta
+										</span>
+									</a>
+								</form>
+							</div>
 						</form>
-
-						
-
 					</div>
-
 				</div>
-
 			</div>
 		</div>
         {% endfor %}
     </div>
-
 </div>
-
 {% endblock %}

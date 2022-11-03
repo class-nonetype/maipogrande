@@ -71,11 +71,37 @@
                                                         <form>
 
                                                             {% if request.user.is_authenticated %}
-                                                            <button class="btn btn-outline-success btn-lg" type="submit"formaction="{% url 'profile' request.user.username %}">Ver ofertas</button>
+                                                            {% if request.user.type == "CLIENTE INTERNO" or request.user.type == "CLIENTE EXTERNO"%}
+
+                                                            <button class="btn btn-outline-success btn-md px-2" type="submit"formaction="{% url 'profile' request.user.username %}">
+                                                                <span class="icon">
+                                                                    <i class="fa-solid fa-dollar-sign"></i>
+                                                                  </span>
+                                          
+                                                                  <span class="btn-text">
+                                                                    Comprar producto
+                                                                  </span>
+                                                            </button>
         
-                                                            {% else %}
+                                                            {% elif request.user.type == "PRODUCTOR" %}
+                                                            {% if post.user.username == request.user.username %}
                                                             <button class="btn btn-outline-success btn-lg" type="submit"formaction="{% url 'profile' post.user.username %}">Ver ofertas</button>
                                                             
+                                                            {% endif %}
+
+                                                            {% elif request.user.type == "TRANSPORTISTA" %}
+                                                            
+                                                            <button class="btn btn-outline-success btn-md px-2" type="submit" formaction="">
+                                                                <span class="icon">
+                                                                    <i class="fa-solid fa-truck"></i>
+                                                                  </span>
+                                          
+                                                                  <span class="btn-text">
+                                                                    Ofrecer transporte
+                                                                  </span>
+                                                            </button>
+
+                                                            {% endif %}
                                                             {% endif %}
                                                 
                                                         </form>

@@ -6,51 +6,41 @@ SYSTEM = platform.system()
 REQUIREMENTS = [
     'Django',
     'Pillow',
-    'djangorestframework'
+    'djangorestframework',
+    'numpy'
 ]
 
-EXCEPTIONS = [
-
-]
-
-index = 0
-import_status = False
-
-for r in REQUIREMENTS:
-    index +=1
-
-    if SYSTEM == 'Windows':
-        os.system('cls')
-
-    elif SYSTEM == 'Linux':
-        os.system('clear')
-
-    print(f'\n[ {index} / {len(REQUIREMENTS)} ]\tInstalling {r}...\n')
-
-    try:
-        os.system(f'pip install {r}')
-        import_status = True
-    
-    except Exception as exc:
-        EXCEPTIONS.append(exc)
-
-
-    if index == len(REQUIREMENTS):
-        print(f'\n[ {import_status} ]\tRequirements\n')
-
-
+EXCEPTIONS = []
 
 PROJECT_DIRECTORY_PATH = os.getcwd()
 
-if SYSTEM == 'Windows':
-    MYSITE_DIRECTORY_PATH = PROJECT_DIRECTORY_PATH + '\\' + 'mysite'
-    MAIPOGRANDE_DIRECTORY_PATH = MYSITE_DIRECTORY_PATH + '\\' + 'maipogrande'
-    MANAGE_FILE_PATH = MYSITE_DIRECTORY_PATH + '\\' + 'manage.py'
+index = 0
 
-elif SYSTEM == 'Linux':
-    MYSITE_DIRECTORY_PATH = PROJECT_DIRECTORY_PATH + '/' + 'mysite'
-    MAIPOGRANDE_DIRECTORY_PATH = MYSITE_DIRECTORY_PATH + '/' + 'maipogrande'
-    MANAGE_FILE_PATH = MYSITE_DIRECTORY_PATH + '/' + 'manage.py'
+for requirement in REQUIREMENTS:
+    index +=1
+
+    print(f'\n[ {index} | {len(REQUIREMENTS)} ]\tInstalling {requirement}...\n')
+
+    try:
+        if SYSTEM == 'Windows':
+
+            MYSITE_DIRECTORY_PATH = PROJECT_DIRECTORY_PATH + '\\' + 'mysite'
+            MAIPOGRANDE_DIRECTORY_PATH = MYSITE_DIRECTORY_PATH + '\\' + 'maipogrande'
+            MANAGE_FILE_PATH = MYSITE_DIRECTORY_PATH + '\\' + 'manage.py'
+
+            os.system(f'pip install {requirement} && cls')
+        
+        elif SYSTEM == 'Linux':
+
+            MYSITE_DIRECTORY_PATH = PROJECT_DIRECTORY_PATH + '/' + 'mysite'
+            MAIPOGRANDE_DIRECTORY_PATH = MYSITE_DIRECTORY_PATH + '/' + 'maipogrande'
+            MANAGE_FILE_PATH = MYSITE_DIRECTORY_PATH + '/' + 'manage.py'
+
+            os.system(f'pip3 install {requirement} && clear')
+            
+    except Exception as exc:
+        EXCEPTIONS.append(exc)
+        pass
 
 PROPERTY = {
     'project' : {
@@ -61,10 +51,24 @@ PROPERTY = {
     }
 }
 
+LOGO = '''
+========================================================================================
+______  ___      _____                    _________                    _________     
+___   |/  /_____ ___(_)_____________      __  ____/____________ _____________  /____ 
+__  /|_/ /_  __ `/_  /___  __ \  __ \     _  / __ __  ___/  __ `/_  __ \  __  /_  _ \\
+_  /  / / / /_/ /_  / __  /_/ / /_/ /     / /_/ / _  /   / /_/ /_  / / / /_/ / /  __/
+/_/  /_/  \__,_/ /_/  _  .___/\____/      \____/  /_/    \__,_/ /_/ /_/\__,_/  \___/ 
+                      /_/                                                            
+                      
+========================================================================================
+'''
+
+print(LOGO)
+
 for value in PROPERTY.values():
 
     if SYSTEM == 'Windows':
-        os.system(f'''python {value['manage']} runserver 0:8000''')
+        os.system(f'''python "{value['manage']}" runserver''')
     
     elif SYSTEM == 'Linux':
-        os.system(f'''python3 "{value['manage']}" runserver 0:8000''')
+        os.system(f'''python3 "{value['manage']}" runserver''')

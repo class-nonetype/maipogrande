@@ -13,7 +13,7 @@ body {
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */
 
-/* Carousel base class */
+/* 
 .carousel {
   margin-bottom: 4rem;
 }
@@ -29,22 +29,25 @@ body {
 
 /* Declare heights because of positioning of img element */
 
-.carousel-item > img {
+
+
+/*
+.carousel-inner > img {
   position: absolute;
   top: 0;
   left: 0;
-  height: 32rem;
-  min-width: 300px;
-  min-height: 32rem;
-
+  min-width: 100%;
+  height: 500px;
 }
 
 .carousel-item {
+
   height: 32rem;
   min-width: 300px;
+  min-height: 32rem;
   
 }
-
+*/
 
 /* MARKETING CONTENT
 -------------------------------------------------- */
