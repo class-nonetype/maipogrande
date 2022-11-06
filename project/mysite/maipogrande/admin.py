@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .models import (
-    Contact, CustomUser, Profile, Post, Relationship, Transport, Contract,
-    ProductRequest, ProductRequestStatus, BankAccount
+    Contact, CustomUser, Profile, Product, Relationship, Transport, Contract,
+    ProductRequest, ProductRequestStatus, BankAccount, Transaction
 )
 
 class CustomUserAdmin(UserAdmin):
@@ -60,10 +60,11 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 admin.site.register(Profile)
 admin.site.register(Relationship)
-admin.site.register(Post)
+admin.site.register(Product)
 admin.site.register(Contract)
 admin.site.register(Transport)
 admin.site.register(ProductRequest)
 admin.site.register(ProductRequestStatus)
-admin.site.register(BankAccount)
 admin.site.register(Contact)
+admin.site.register(Transaction)
+admin.site.register(BankAccount)

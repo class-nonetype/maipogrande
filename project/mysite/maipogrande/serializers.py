@@ -2,7 +2,14 @@ from rest_framework import serializers
 
 
 from .models import (
-    CustomUser, ProductRequest, Profile, Relationship, Post, BankAccount, ProductRequestStatus, Transport
+    CustomUser,
+    ProductRequest,
+    Profile,
+    Relationship,
+    Product,
+    BankAccount,
+    ProductRequestStatus,
+    Transport
 )
 
 # Serializador para la API
@@ -25,9 +32,9 @@ class ProfileSerializer(serializers.ModelSerializer):
        fields = '__all__'
 
 
-class PostSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
    class Meta:
-       model = Post
+       model = Product
        fields = '__all__'
 
 

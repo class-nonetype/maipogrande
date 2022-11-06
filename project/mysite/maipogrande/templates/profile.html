@@ -4,19 +4,34 @@
 {% load humanize %}
 {% block content %}
 
-<div class="row">
-    <br></br>
 
-    <div class="table-responsive py-4">
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+    .card-profile {
+        padding-top : 10px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+<div class="row">
+    <div class="table-responsive">
 
         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-12">
-            <h2 class ="h2 text-start text-dark">Usuario</h2>
 
-            <br></br>
+            <div class="p-3 mb-2 bg-dark text-white">
+                <h1 class="display-6 text-title">MiPerfil</h1>
+            </div>
 
-            <div class="card">
-                <br></br>
-                    
+
+            <div class="card card-profile">
                 <div class="card-body">
                     <div>
                         <div class="card-body">
@@ -60,6 +75,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
 
         <br></br>
@@ -67,8 +84,10 @@
     
         <div class="col-12">
     
-            <h2 class ="h2 text-start text-dark">Informacion personal</h2>
 
+            <div class="p-3 mb-2 bg-dark text-white">
+                <h1 class="display-6 text-start">Informacion personal</h1>
+            </div>
             <div class="card">
                 
                 <div class="card-body">
@@ -78,7 +97,6 @@
                             
                             <form>
                                 <fieldset disabled>
-                                  <!-- <legend>Disabled fieldset example</legend> -->
 
                                     <div class="mb-3">
                                         <label for="username" class="form-label">Nombre de usuario</label>
@@ -147,12 +165,24 @@
     <br></br>
 
     <div class="col-12">
-        <h2 class ="h2 text-start text-dark">Publicaciones</h2>
-        <br></br>
+        <div class="p-3 mb-2 bg-dark text-white">
+            <h1 class="display-6 text-start">Publicaciones</h1>
+        </div>
+
+
+
+        {% if posts.count == 0 %}
+        <div class="mb-2bg-white text-dark" style="padding-top: 100px; padding-bottom: 100px;">
+            <h1 class="display-6 text-center">No hay publicaciones disponibles por el momento ☹</h1>
+        </div>
+
+        {% else %}
         
         {% for post in posts %}
         <div class="table-responsive py-4">
             <table class="table table-striped">
+
+
                 <thead>
                     <tr>
                         <th></th>
@@ -216,9 +246,13 @@
                         </div>
                     </tr>
                 </tbody>
+
             </table>
         </div>
         {% endfor %}
+
+
+        {% endif %}
     </div>
 </div>
 {% endblock %}

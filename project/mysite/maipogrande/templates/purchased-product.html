@@ -1,0 +1,131 @@
+{% extends './layout.html' %}
+{% block content %}
+{% load humanize %}
+{% load static %}
+
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+    .card-profile {
+        padding-top : 10px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-12">
+        
+
+		<div class="p-3 mb-2 bg-dark text-white">
+			<h1 class="display-6 text-title text-center">MiProducto</h1>
+
+			<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 bg-dark text-white">
+
+				{% for product in purchased_product %}
+
+					<div class="card bg-dark">
+							
+						<div class="card-body">
+
+
+							<div class="row">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+
+																
+									<div class="p-3 mb-2 bg-dark">
+
+										{% if product.status == "APROBADO" %}
+											<h1 class="display-6 text-end text-success">Transacción {{ product.id_transaction }}</h1>
+											<div class="progress">
+												<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100"></div>
+											</div>
+										{% elif product.status == "PENDIENTE" %}
+											<h1 class="display-6 text-end text-info">Transacción {{ product.id_transaction }}</h1>
+
+											<div class="progress">
+												<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="100" aria-valuemax="100"></div>
+											</div>
+										{% elif product.status == "RECHAZADO" %}
+											<h1 class="display-6 text-end text-danger">Transacción {{ product.id_transaction }}</h1>
+											<div class="progress">
+												<div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100"></div>
+											</div>
+										{% endif %}
+									</div>
+									<i class="clock"></i>
+									<time data-time="#">{{ product.timestamp|naturaltime }}</time>
+									<br></br>
+									<div class = "form-group">
+										<fieldset disabled>
+											
+											<div class="mb-3">
+												<label for="product" class="form-label">Producto </label>
+												<input type="text" id="product" class="form-control bg-transparent text-white" placeholder="{{ product.product }}">
+											</div>
+
+
+											<div class="mb-3">
+												<label for="quantity" class="form-label">Cantidad (kg) </label>
+												<input type="text" id="quantity" class="form-control bg-transparent text-white" placeholder=" {{ product.quantity }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="producer" class="form-label">Productor </label>
+												<input type="text" id="producer" class="form-control bg-transparent text-white" placeholder=" {{ product.producer }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="client" class="form-label">Cliente </label>
+												<input type="text" id="client" class="form-control bg-transparent text-white" placeholder="$ {{ product.client }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="price" class="form-label">Precio </label>
+												<input type="text" id="price" class="form-control bg-transparent text-white" placeholder=" {{ product.price }}">
+											</div>
+										
+											<div class="mb-3">
+												<label for="total" class="form-label">Total </label>
+												<input type="text" id="total" class="form-control bg-transparent text-white" placeholder=" {{ product.total }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="transportation" class="form-label">Transporte encontrado </label>
+												<input type="text" id="transportation" class="form-control bg-transparent text-white" placeholder=" {{ product.transportation }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="status" class="form-label">Estado  </label>
+												<input type="text" id="status" class="form-control bg-transparent text-white" placeholder=" {{ product.status }}">
+											</div>
+										</fieldset>
+
+									</div>
+
+									<hr class = "featurette-divider bg-transparent">
+						
+								</div>
+							</div>
+						</div>
+					</div>
+
+        		{% endfor %}
+			</div>
+
+
+
+		</div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+

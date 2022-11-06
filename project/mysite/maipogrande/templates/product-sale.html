@@ -1,0 +1,415 @@
+{% extends './layout.html' %}
+{% load humanize %}
+
+{% block content %}
+
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+
+    #searcher {
+		padding-top: 50px;
+		padding-bottom: 100px;
+	}
+    
+    
+</style>
+
+<div class="row" id="row-product-sale">
+
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> <!-- 4 -->
+
+
+
+		<div class="p-3 mb-2 bg-dark text-white">
+			<h1 class="display-6 text-title text-center">Venta</h1>
+
+
+
+
+
+
+
+
+
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 bg-dark text-white">
+
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
+
+                    <div class="table-responsive py-4">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+        
+                                <tr>
+                                    <div class="container-article">
+                                        
+                                        <div>
+        
+        
+                                            <div class="card text-white bg-dark mb-3" style="max-width: 100%; max-height : auto;">
+                                                <div class="card-header">
+                                                    <h2 class="h2 text-start text-light">Producto <span class="text-muted">{{ product.title }}</span></h2>
+                                                </div>
+                                                
+                                                <div class="card-body">
+        
+                                                    <div class="row">
+                                                        <div class="col-sm">
+                                                            <div class="col-12">
+                                                                {% if product.image %}
+                                                                    <img class="card-img img-fluid" src="{{ product.image.url }}" alt="" style="max-width : 600px; max-height : 300px">
+                                                                {% endif %}
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-sm">
+                                                            <h6 class="h6 text-start">Publicado hace <span class="text-muted">
+                                                                <i class="clock"></i>
+                                                                <time data-time="#">{{ product.timestamp|naturaltime }}</time>
+                                                            </span></h6>
+
+                                                            <hr class = "featurette-divider">
+
+                                                            
+                                                            <div class="mb-3">
+
+
+                                                                <label class="form-label h6 text-start" for="input-seller">Nombre del vendedor</label>
+                                                                
+                                                                <input name="input-seller"
+                                                                        class="form-control bg-transparent text-white"
+                                                                        id="input-seller"
+                                                                        value="{{ product.user.first_name }} {{ product.user.last_name }}"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                            </div>
+
+
+                                                            <div class="mb-3">
+
+
+                                                                <label class="form-label h6 text-start" for="input-buyer">Nombre del comprador</label>
+                                                                
+                                                                <input name="input-buyer"
+                                                                        class="form-control bg-transparent text-white"
+                                                                        id="input-buyer"
+                                                                        value="{{ request.user.first_name }} {{ request.user.last_name }}"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                            </div>
+                                                            <hr class = "featurette-divider bg-dark">
+
+                                                            <div class="mb-3">
+                                                                <div class="bg-dark text-white">
+                                                                    <h1 class="display-6 text-center">Detalle</h1>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label class="form-label h6 text-start" for="input-price">Precio (kg)</label>
+                
+                                                                    <input name="input-price"
+                                                                        class="form-control bg-transparent text-white"
+
+                                                                        value="{{ product.price }}"
+                                                                        id="input-price"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                                </div>
+                                                                
+                                                                <div class="mb-3">
+                                                                    <label class="form-label h6 text-start" for="input-stock">Cantidad (kg) disponibles</label>
+                
+                                                                    <input name="input-stock"
+                                                                            class="form-control bg-transparent text-white"
+                                                                        value="{{ product.quantity }}"
+                                                                        id="input-stock"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                                </div>
+        
+        
+        
+
+        
+                                                                <div class="mb-3">
+                                                                    <label class="form-label h6 text-start" for="input-quantity">Cantidad (kg) a comprar</label>
+                                                                    <input name="input-quantity"
+                                                                        type="number"
+                                                                        min="1"
+                                                                        max="{{ product.quantity }}"
+                                                                        class="form-control bg-transparent text-white"
+                                                                        placeholder="Ingresa la cantidad a comprar"
+                                                                        id="input-quantity"
+                                                                        onkeyup=getMinMaxQuantityValue(this)
+                                                                        onblur="getTotalToPay()"
+                                                                        oninput="getTotalToPay()"
+                                                                        onchange="getTotalToPay()"
+                                                                        style="text-align : end;">
+                                                                </div>
+
+                                                            </div>
+                                                            
+
+                                                            <div class="mb-3">
+                                                                <div class="mb-3">
+                                                                    <div class="bg-dark text-white">
+                                                                        <h1 class="display-6 text-center" style="padding-top: 20px; padding-bottom: 40px;">Metodo de pago</h1>
+                                                                    </div>
+
+
+
+
+
+
+
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label h6 text-start" for="bank-select">Cuenta bancaria</label>
+        
+                                                                        <select class="form-select bg-transparent text-white" id="bank-select" aria-label="Selecciona una cuenta bancaria" onchange="sendSelectedBank()">
+                                                                            <option disable selected value="">Selecciona un banco</option>
+                    
+                                                                                {% for bank in banks %}
+                                                                                
+                                                                                    <option value="{{ bank.id_bank_account }}" id="bank-option">
+                                                                                        
+                                                                                        {{ bank.bank_account_number}} {{ bank.bank_name }} - {{ bank.type_bank_account }}
+
+                                                                                    </option>
+                                                                                {% endfor %}
+
+                                                                        </select>
+                                                                        <style>
+                                                                            select {
+                                                                                padding: 5px;
+                                                                                color: #222222;
+                                                                                font-size: 12px;
+                                                                                background: transparent;
+                                                                                -webkit-appearance: none;
+
+                                                                            }
+                                                                            select option{
+                                                                                background-color: #222222;
+                                                                            }
+                                                                        </style>
+
+                                                                        <div class="mb-3">
+
+
+                                                                            <label class="form-label h6 text-start" for="bank-select">ID Cuenta bancaria</label>
+                                                                            
+                                                                            <input name="input-bank-id"
+                                                                                    class="form-select bg-transparent text-white" 
+                                                                                    id="input-bank-id"
+                                                                                    disabled
+                                                                                    style="text-align : end;">
+                                                                                
+                                                                        </div>
+
+
+                                                                        <script>
+                                                                            function sendSelectedBank() {
+                                                                                var selectedBank = document.getElementById("bank-select");
+                                                                                var valueSelectedBank = selectedBank.value;
+                
+                                                                                var textSelectedBank = selectedBank.options[selectedBank.selectedIndex].text;
+
+                                                                                var input_bank_id = document.getElementById('input-bank-id');
+                                                                                var input_bank_amount = document.getElementById('input-bank-amount');
+
+        
+                                                                                input_bank_id.value = valueSelectedBank;
+                                                                                //input_bank_amount.value = "{{ bank.bank_amount }}";
+                                                                                //input_bank_amount.replace('0', input_bank_id);
+
+                                                                                //input_bank_amount.value = valueSelectedBank;
+                
+                                                                            }
+                
+                                                                        </script>
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                            <div class="mb-3">
+                                                                <div class="mb-3">
+                                                                    <div class="bg-dark text-white">
+                                                                        <h1 class="display-6 text-center" style="padding-top: 20px; padding-bottom: 40px;">Total a pagar</h1>
+                                                                    </div>
+
+        
+        
+        
+                                                                    <div class="mb-3" onload="total.reset();">
+                                                                        <label class="form-label h6 text-start" for="input-quantity">Total</label>
+
+                                                                        <form id="total">
+                                                                            <input name="input-total text-end"
+                                                                                class="form-select bg-transparent text-white" 
+                                                                                id="input-total"
+                                                                                disabled
+                                                                                style="text-align : end;padding-top: 10px; padding-bottom: 20px;"">
+
+                                                                        </form>
+
+
+                                                                        <hr class = "featurette-divider">
+
+                                                                        <button class="btn btn-outline-success btn-md px-2" 
+                                                                                type="submit"
+                                                                                onclick="payProduct()">
+                                                                                
+                                                                            <span class="icon">
+                                                                                <i class="fa-solid fa-dollar-sign"></i>
+                                                                            </span>
+                                                        
+                                                                            <span class="btn-text">
+                                                                                Comprar producto
+                                                                            </span>
+                                                                        </button>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+
+                                                            <script>
+                
+                                                                function payProduct() {
+
+                                                                    var buyerFullName = document.getElementById("input-buyer").value;
+                                                                    var sellerFullName = document.getElementById("input-seller").value;
+                                                                    var price = document.getElementById("input-price").value;
+                                                                    var availableStock = document.getElementById("input-stock").value;
+                                                                    var quantity = document.getElementById("input-quantity").value;
+                                                                    //var availableBankAmount = document.getElementById("input-bank-amount").value;
+                                                                    var availableBankID = document.getElementById("input-bank-id").value;
+
+                                                                    var transaction = parseInt(price * quantity)
+
+                                                                    //
+                                                                    var total = document.getElementById("input-total").value;
+
+
+                                                                    /* if (parseInt(availableBankAmount) > parseInt(total)) {
+                                                                        var transaction = availableBankAmount - total;
+                                                                    } else {
+                                                                        var transaction = total - availableBankAmount;
+                                                                    } */
+
+
+
+                                                                    //document.title = 'FERIA VIRTUAL MAIPO GRANDE';
+                                                                    //window.print();
+
+                                                                    alert(
+                                                                        "Producto " + "{{ product.title }}" + "\n" +
+                                                                        "ID Producto " + "{{ product.id }}" + "\n" +
+                                                                        "Comprador " + buyerFullName + "\n" +
+                                                                        "Vendedor " + sellerFullName + "\n" +
+                                                                        "\n" +
+                                                                        "Stock disponible del producto " + availableStock + "\n" +
+                                                                        "\n" +
+                                                                        "Cantidad de productos " + quantity + "\n" +
+                                                                        "Precio unitario " + price + "\n" + 
+                                                                        "Precio total " + transaction + "\n" + 
+                                                                        "\n" + 
+                                                                        "ID Banco " + availableBankID + "\n" + 
+                                                                        //"Saldo inicial de la transaccion $" + availableBankAmount  + "\n" +
+                                                                        "Saldo final de la transaccion$" + transaction  + "\n"
+                                                                    );
+
+                                                                    var url = "{% url 'product_sales_transaction' id_bank_account=111 amount=222 id_product=333 quantity=444 id_producer=555 id_client=666 price=777 %}";
+                                                                    url = url.replace('111', availableBankID);
+                                                                    url = url.replace('222', transaction);
+                                                                    url = url.replace('333', "{{ product.id }}");
+                                                                    url = url.replace('444', quantity);
+                                                                    url = url.replace('555', "{{ product.user.id }}");
+                                                                    url = url.replace('666', "{{ request.user.id }}");
+                                                                    url = url.replace('777', price);
+
+                                                                    document.location.href = url;
+
+                                                                };
+
+                                                            </script>
+
+
+                                                            <script>
+                                                                function getMinMaxQuantityValue(el) {
+                                                                    if (el.value != "") {
+                                                                        if (parseInt(el.value) < parseInt(el.min)) {
+                                                                            el.value = el.min;
+                                                                        }
+                                                                        if (parseInt(el.value) > parseInt(el.max)) {
+                                                                            el.value = el.max;
+                                                                        }
+                                                                    }
+                                                                };
+                                                            </script>
+
+                                                            <script>
+
+                                                                function getTotalToPay(){
+                                                                    var quantity = document.getElementById("input-quantity").value;
+                                                                    var stock = document.getElementById("input-stock").value;
+                                                                    var price = document.getElementById("input-price").value;
+        
+                                                                    var total = quantity * price;
+        
+                                                                    var input_total = document.getElementById('input-total');
+
+                                                                    input_total.value = total;
+        
+                                                                };
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+
+{% endblock %}

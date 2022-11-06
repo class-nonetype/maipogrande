@@ -2,7 +2,13 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import (
-    Contact, CustomUser, Post, Contract, BankAccount, ProductRequest, Transport,
+    Contact,
+    CustomUser,
+    Product,
+    Contract,
+    BankAccount,
+    ProductRequest,
+    Transport,
 
     USER_TYPE, TYPE_BANK_ACCOUNT, TYPE_TRANSPORT,
     BANK_NAMES, CONTRACT_STATUS, ANSWER, COUNTRY
@@ -15,8 +21,13 @@ import datetime
 # Formulario de registro de usuario
 class SignUpForm(UserCreationForm):
     
-    first_name = forms.CharField(label='Nombres', widget = forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField(label='Apellidos', widget = forms.TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(
+        label='Nombres',
+        widget = forms.TextInput(attrs = {
+            'class': 'form-control text-uppercase'
+        })
+    )
+    last_name = forms.CharField(label='Apellidos', widget = forms.TextInput(attrs={'class': 'form-control  text-uppercase'}))
     email = forms.EmailField(label = 'E-mail',widget = forms.EmailInput(attrs={'class': 'form-control'}))
     username = forms.CharField(label = 'Nombre de Usuario', widget = forms.TextInput(attrs={'class': 'form-control'}))
     password1 = forms.CharField(label='Contraseña', widget = forms.PasswordInput(attrs={'class': 'form-control'}))
@@ -41,11 +52,25 @@ class SignUpForm(UserCreationForm):
     
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
+    
+    def clean_first_name(self):
+        return self.cleaned_data['first_name'].upper()
+    
+    def clean_last_name(self):
+        return self.cleaned_data['last_name'].upper()
+
+
 
 
 # Formulario de publicacion del producto
-class PostForm(forms.ModelForm):
-    
+class ProductForm(forms.ModelForm):
+
+
+    owner_full_name = forms.CharField(
+        label = 'Nombre completo del titular',
+        widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ingresa el nombre completo del titular'}),
+        required = True)
+
     title = forms.CharField(label = 'Titulo', widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ej: Manzana'}), required=True)
     description = forms.CharField(label = 'Descripcion', widget = forms.Textarea(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Agrega una descripcion'}), required=True)
     price = forms.IntegerField(label = 'Precio (kg)', widget = forms.NumberInput(attrs={'class': 'form-control', 'type':'number' }), required=True, max_value=1000000000, min_value=1000)
@@ -56,7 +81,7 @@ class PostForm(forms.ModelForm):
     image = forms.ImageField(label = 'Selecciona la imagen', widget = forms.FileInput(attrs={'class': 'form-control'}))
     
     class Meta:
-        model = Post
+        model = Product
         fields = ['title', 'price', 'quantity', 'description', 'image']
 
 
@@ -113,7 +138,10 @@ class BankAccountForm(forms.ModelForm):
         widget = forms.NumberInput(attrs={'class': 'form-control', 'type':'number', 'placeholder' : 'Ej : 11222333'}),
         required=True)
 
-    owner_full_name = forms.CharField(label = 'Nombre completo del titular', widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ingresa el nombre completo del titular'}), required=True)
+    owner_full_name = forms.CharField(
+        label = 'Nombre completo del titular',
+        widget = forms.TextInput(attrs={'class': 'form-control', 'rows':2, 'placeholder': 'Ingresa el nombre completo del titular'}),
+        required = True)
     
     class Meta:
         model = BankAccount

@@ -4,17 +4,71 @@
 {% load static %}
 
 
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+	#searcher {
+		padding-top: 50px;
+		padding-bottom: 100px;
+	}
+    
+</style>
+
 <div class="row">
     <div class="col-12">
 
+		<div class="p-3 mb-2 bg-dark text-white">
+			<h1 class="display-6 text-title text-center">Estado de solicitud</h1>
+
+			<div class="p-3 bg-dark text-white">
+
+				<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="searcher" >
+					<form action="{% url 'search_product_request' %}" class="form-inline" method="get">
+		
+						<div class="input-group align-content-end" style="padding-left: 15%; padding-right: 15%;">
+		
+							<input name="search"
+								   type=""
+								   class="form-control"
+								   placeholder="Ingresa alguna solicitud de un producto"
+								   id="input-search">
+		
+							<button class="btn btn-success btn-group-sm" type="submit" id="btn-search">
+								<span class="icon">
+									<i class="fa-solid fa-search"></i>
+								</span>
+						
+								<span class="btn-text">
+									Buscar producto
+								</span>
+							</button>
+						</div>
+					</form>
+		
+				</div>
+			</div>
+		</div>
+
 		{% if requests.count > 0 %}
-        <h2 class ="h2 text-start text-dark">Estados de las solicitudes</h2>
+			<div class="mb-2bg-white text-dark" style="padding-top: 100px; padding-bottom: 100px;">
+				
+				{% if requests.count == 1 %}
+					<h1 class="display-6 text-start">{{ requests.count }} Solicitud disponible</h1>
+
+				{% elif requests.count > 1 %}
+					<h1 class="display-6 text-start">{{ requests.count }} Solicitudes disponibles</h1>
+
+				{% endif %}
+			</div>
 
 		{% else %}
-        <h2 class ="h2 text-start text-dark">No hay ninguna oferta por el momento</h2>
-		
+			<div class="mb-2bg-white text-dark" style="padding-top: 100px; padding-bottom: 100px;">
+				<h1 class="display-6 text-center">No hay solicitudes disponibles por el momento ☹</h1>
+			</div>
 		{% endif %}
-        <br></br>
         
         {% for req in requests %}
 		<div class="card">

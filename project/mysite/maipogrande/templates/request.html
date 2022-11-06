@@ -5,163 +5,214 @@
 {% block content %}
 
 {% if request.user.is_authenticated %}
+
+
+
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+</style>
+
+
+
+
 <div class="row">
 
 
     <div class="col-12">
-        <h2 class ="h2 text-start text-dark">Solicitudes</h2>
-        <hr></hr>
-        
-        {% for req in requests %}
-        <div class="table-responsive py-4">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th></th>
-                    </tr>
-                </thead>
-                    
-                <tbody>
-
-                    <tr>
-                        <div class="container-article">
-                                
-                            <div>
-
-                                <div class="card text-white bg-dark mb-3" style="max-width: 100%;">
-                                    <div class="card-header">
-
-
-
-                                        {% if request.user.type == "PRODUCTOR" %}
-                                        <div class="pagination">
-                                            <span class="step-links">
-                                                {% if requests.has_previous %}
-                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page=1'" type="button">
-                                                        <i class="fa-solid fa-angle-left"></i>
-                                                    </button>
-
-                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ requests.previous_page_number }}'" type="button">
-                                                        <i class="fa-solid fa-angle-double-left"></i>
-                                                    </button>
-                                                {% endif %}
-                                        
-                                                <span class="current">
-                                                    Solicitud {{ requests.number }} de {{ requests.paginator.num_pages }}.
-                                                </span>
-                                        
-                                                {% if requests.has_next %}
-                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ requests.next_page_number }}'" type="button">
-                                                        <i class="fa-solid fa-angle-right"></i>
-                                                    </button>
-
-                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ requests.paginator.num_pages }}'" type="button">
-                                                        <i class="fa-solid fa-angle-double-right"></i>
-                                                    </button>
-                                                {% endif %}
-                                            </span>
-                                        </div>
-                                        {% endif %}
-                                        <i class="clock"></i>
-                                        <time data-time="#">{{ req.timestamp|naturaltime }}</time>
-                                        <hr></hr>
-
-                                        <a class="btn btn-outline-warning" href="{% url 'profile' req.user.username %}" role="button">@ {{ req.user.username }}</a>
-                                        <hr></hr>
-                                        
-                                        <h2 class="h2 text-start text-light">Producto <span class="text-muted">{{ req.title }}</span></h2>
-                                    </div>
-                                        
-                                    <div class="card-body">
-
-                                        <div class="row">
-                                                
-                                            <div class="col-sm">
-                                                <h6 class="h6 text-start">Kilogramos solicitados <span class="text-muted">{{ req.quantity }}</span></h6>
-                                                <h6 class="h6 text-start">Descripcion <span class="text-muted">{{ req.description }}</span></h6>
-                                                <h6 class="h6 text-start">Fecha solicitada <span class="text-muted">{{ req.requested_date }}</span></h6>
-                                                <h6 class="h6 text-start">Requiere de cuidados de temperatura <span class="text-muted">{{ req.temperature_care }}</span></h6>
-
-
-
-                                                {% if request.user.type == "PRODUCTOR" %}
-
-                                                <div class="card text-white bg-dark mb-3" id="offer-product">
-                    
-                                                    <div class="card-body">
-                                            
-                                                        <div class="row">
-                                                            <div class="col-sm-12 col-md-6 col-lg-8 col-xl-12">
-                                                                <br></br>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                
-                                                <div class="d-flex flex-row-reverse">
-                                                    <div class="input-group">
-                                                        <select class="form-select" id="product-select" aria-label="Selecciona un producto">
-                                                            <option disable selected value="">Selecciona un producto</option>
-
-                                                            {% for product in products %}
-                                                            
-                                                            <option value="{{ product.id }}">{{ product.title }}</option>
-
-                                                            {% endfor %}
-                                                            
-                                                        </select>
-
-
-
-                                                        <script type="text/javascript">
-
-                                                            function sendSelectedProduct() {
-                                                                var selectedProduct = document.getElementById("product-select");
-                                                                var valueSelectedProduct = selectedProduct.value;
-                                                                var textSelectedProduct = selectedProduct.options[selectedProduct.selectedIndex].text
-                                                                var url = "{% url 'offer_product' 1 %}";
-                                                                alert("Se ha seleccionado el producto " + textSelectedProduct + "\nCon la ID: " + valueSelectedProduct);
-
-                                                                document.location.href = url.replace('1', valueSelectedProduct);
-
-                                                            };
-
-                                                        </script>
-
-                                                         <button
-                                                            class="btn btn-outline-success btn-lg"
-                                                            type="submit"
-                                                            id="btn-offer-product"
-                                                            onclick="sendSelectedProduct()">
-                                                            Ofrecer producto
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-
-
-                                                
-                                                {% elif request.user.type == "CLIENTE INTERNO" or request.user.type == "CLIENTE EXTERNO"%}
-
-                                                <div class="d-flex flex-row-reverse">
-                                                    <a class="btn btn-outline-success btn-lg" id="btn-offer-product" type="submit" href="{% url 'client_request_status' req.id_product_request %}">Ver estado de la solicitud #{{ req.id_product_request }}</a>
-                                                </div>
-
-                                                {% endif %}
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="p-3 mb-2 bg-dark text-white text-center">
+            <h1 class="display-6 text-title">Solicitudes</h1>
         </div>
-        {% endfor %}
+
+        {% if requests.count != 0 %}
+
+            <div class="mb-2bg-white text-dark" style="padding-top: 100px; padding-bottom: 100px;">
+                
+                {% if requests.count == 1 %}
+                    <h1 class="display-6 text-start">{{ requests.count }} Solicitud disponible</h1>
+
+                {% elif requests.count > 1 %}
+                    <h1 class="display-6 text-start">{{ requests.count }} Solicitudes disponibles</h1>
+
+                {% endif %}
+
+
+                {% if request.user.type == "CLIENTE INTERNO" or request.user.type == "CLIENTE EXTERNO"%}
+                    <div class="d-flex flex-row-reverse">
+                        <a class="btn btn-outline-success btn-lg" id="btn-offer-product" type="submit" href="{% url 'client_request_status' %}">Ver estados de las solicitudes</a>
+                    </div>
+                {% endif %}
+
+
+
+
+                {% for req in requests %}
+                    <div class="table-responsive py-4">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                                
+                            <tbody>
+            
+                                <tr>
+                                    <div class="container-article">
+                                            
+                                        <div>
+            
+                                            <div class="card text-white bg-dark mb-3" style="max-width: 100%;">
+                                                <div class="card-header">
+            
+            
+            
+                                                    {% if request.user.type == "PRODUCTOR" %}
+
+                                                        <div class="pagination">
+                                                            <span class="step-links">
+                                                                {% if requests.has_previous %}
+                                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page=1'" type="button">
+                                                                        <i class="fa-solid fa-angle-left"></i>
+                                                                    </button>
+                
+                                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ requests.previous_page_number }}'" type="button">
+                                                                        <i class="fa-solid fa-angle-double-left"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                        
+                                                                <span class="current">
+                                                                    Solicitud {{ requests.number }} de {{ requests.paginator.num_pages }}.
+                                                                </span>
+                                                        
+                                                                {% if requests.has_next %}
+                                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ requests.next_page_number }}'" type="button">
+                                                                        <i class="fa-solid fa-angle-right"></i>
+                                                                    </button>
+                
+                                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ requests.paginator.num_pages }}'" type="button">
+                                                                        <i class="fa-solid fa-angle-double-right"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    {% endif %}
+
+                                                    <i class="clock"></i>
+                                                    <time data-time="#">{{ req.timestamp|naturaltime }}</time>
+                                                    <hr></hr>
+            
+                                                    <a class="btn btn-outline-warning" href="{% url 'profile' req.user.username %}" role="button">@ {{ req.user.username }}</a>
+                                                    <hr></hr>
+                                                    
+                                                    <h2 class="h2 text-start text-light">Producto <span class="text-muted">{{ req.title }}</span></h2>
+                                                </div>
+                                                    
+                                                <div class="card-body">
+            
+                                                    <div class="row">
+                                                            
+                                                        <div class="col-sm">
+                                                            <h6 class="h6 text-start">Nombre del Cliente <span class="text-muted">{{ user.first_name }}</span></h6>
+                                                            <h6 class="h6 text-start">Kilogramos solicitados <span class="text-muted">{{ req.quantity }}</span></h6>
+                                                            <h6 class="h6 text-start">Descripcion <span class="text-muted">{{ req.description }}</span></h6>
+                                                            <h6 class="h6 text-start">Fecha solicitada <span class="text-muted">{{ req.requested_date }}</span></h6>
+                                                            <h6 class="h6 text-start">Requiere de cuidados de temperatura <span class="text-muted">{{ req.temperature_care }}</span></h6>
+            
+            
+            
+                                                            {% if request.user.type == "PRODUCTOR" %}
+            
+                                                            <div class="card text-white bg-dark mb-3" id="offer-product">
+                                
+                                                                <div class="card-body">
+                                                        
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12 col-md-6 col-lg-8 col-xl-12">
+                                                                            <br></br>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            
+                                                            <div class="d-flex flex-row-reverse">
+                                                                <div class="input-group">
+                                                                    <select class="form-select" id="product-select" aria-label="Selecciona un producto">
+                                                                        <option disable selected value="">Selecciona un producto</option>
+            
+                                                                        {% for product in products %}
+                                                                        
+                                                                            <option value="{{ product.id }}">{{ product.title }}</option>
+            
+                                                                        {% endfor %}
+                                                                        
+                                                                    </select>
+            
+            
+            
+                                                                    <script type="text/javascript">
+            
+                                                                        function sendSelectedProduct() {
+                                                                            var selectedProduct = document.getElementById("product-select");
+                                                                            var valueSelectedProduct = selectedProduct.value;
+                                                                            var textSelectedProduct = selectedProduct.options[selectedProduct.selectedIndex].text
+                                                                            var url = "{% url 'offer_product' 1 %}";
+                                                                            alert("Se ha seleccionado el producto " + textSelectedProduct + "\nCon la ID: " + valueSelectedProduct);
+            
+                                                                            document.location.href = url.replace('1', valueSelectedProduct);
+            
+                                                                        };
+            
+                                                                    </script>
+            
+                                                                    <button
+                                                                        class="btn btn-outline-success btn-lg"
+                                                                        type="submit"
+                                                                        id="btn-offer-product"
+                                                                        onclick="sendSelectedProduct()">
+                                                                        Ofrecer producto
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+            
+            
+            
+                                                            
+                                                            <!-- if -->
+            
+                                                            {% endif %}
+            
+                                                        </div>
+            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+
+
+
+            </div>
+
+        {% else %}
+            <div class="mb-2bg-white text-dark" style="padding-top: 100px; padding-bottom: 100px;">
+                <h1 class="display-6 text-center">No hay Solicitudes disponibles por el momento ☹</h1>
+            </div>
+        {% endif %}
+
+    
+
     </div>
 </div>
 {% endif %}

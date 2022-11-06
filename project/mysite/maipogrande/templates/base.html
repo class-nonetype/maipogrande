@@ -96,291 +96,292 @@
           <div id="navbarCollapse" class="collapse navbar-collapse">
 
             {% if request.user.is_authenticated %}
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'home'%}" id="nav-link-home">Inicio</a>
-              </li>
+              <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                      
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="{% url 'home'%}" id="nav-link-home">Inicio</a>
+                </li>
 
-              
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'feed'%}" id="nav-link-feed">Publicaciones</a>
-              </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="{% url 'feed'%}" id="nav-link-feed">Publicaciones</a>
+                </li>
 
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'profile' request.user.username %}" role="button" id="nav-link-profile">
-                  Mi Perfil 
-                </a>
-              </li>
-              
-              {% if request.user.type != "TRANSPORTISTA" %}
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'bank'%}" id="nav-link-bank">Mi Banco</a>
-              </li>
-
-              {% else %}
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'transport'%}" id="nav-link-bank">Mi Transporte</a>
-              </li>
-
-              {% endif %}
-              <!-- USUARIO CONSULTOR -->
-              {% if request.user.type == "CONSULTOR" %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Usuario Consultor
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                  <li><a class="dropdown-item" href="#">Generar informe de venta</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="#">Editar mi perfil</a></li>
-                </ul>
-              <!-- USUARIO CONSULTOR -->
-
-
-              <!-- USUARIO CLIENTE EXTERNO -->
-              {% elif request.user.type == "CLIENTE EXTERNO" %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Usuario Cliente Externo
-                </a>
-
-
-
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                  
-                  <li>
-                    <a class="dropdown-item" href="{% url 'post_product' %}"><i class="icon fa-solid fa-circle-plus" id="icon"></i>Crear una publicacion</a>
-                  </li>
-
-                  <li>
-                    <a class="dropdown-item" href="{% url 'product_request' %}" type="submit"><i class="icon fa-solid fa-clipboard-list"></i>Crear una solicitud de producto</a>
-                  </li>
-
-                  <li>
-                    <a class="dropdown-item" href="{% url 'request' %}" type="submit"><i class="icon fa-solid fa-diagram-project"></i>Solicitudes</a>
-                  </li>
-
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  
-                  <li>
-                    <a class="dropdown-item" href="#"><i class="icon fa-solid fa-user-pen"></i>Editar mi perfil</a>
-                  </li>
-                </ul>
-              <!-- USUARIO CLIENTE EXTERNO -->
-
-
-              <!-- USUARIO CLIENTE INTERNO -->
-              {% elif request.user.type == "CLIENTE INTERNO" %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Usuario Cliente Interno
-                </a>
-
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                  
-                  <li>
-                    <a class="dropdown-item" href="{% url 'post_product' %}"><i class="icon fa-solid fa-circle-plus" id="icon"></i>Crear una publicacion</a>
-                  </li>
-
-                  <li>
-                    <a class="dropdown-item" href="{% url 'product_request' %}" type="submit"><i class="icon fa-solid fa-clipboard-list"></i>Crear una solicitud de producto</a>
-                  </li>
-
-                  <li>
-                    <a class="dropdown-item" href="{% url 'request' %}" type="submit"><i class="icon fa-solid fa-diagram-project"></i>Solicitudes</a>
-                  </li>
-
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  
-                  <li>
-                    <a class="dropdown-item" href="#"><i class="icon fa-solid fa-user-pen"></i>Editar mi perfil</a>
-                  </li>
-                </ul>
-              <!-- USUARIO CLIENTE INTERNO -->
-
-
-              <!-- USUARIO PRODUCTOR -->
-              {% elif request.user.type == "PRODUCTOR" %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Usuario Productor
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                  <li>
-                    <a class="dropdown-item" href="{% url 'post_product' %}" id="post_product"><i class="icon fa-solid fa-circle-plus" id="icon"></i>Crear una publicacion</a>
-                  </li>
-
-                  <li>
-                    <a class="dropdown-item" href="{% url 'request' %}" id="requests"><i class="icon fa-solid fa-message"></i>Solicitudes de Clientes</a>
-                  </li>
-                  
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-
-                  <li>
-                    <a class="dropdown-item" href="#"><i class="icon fa-solid fa-user-pen"></i>Editar mi perfil</a>
-                  </li>
-
-                </ul>
-              <!-- USUARIO PRODUCTOR --> 
-
-
-              <!-- USUARIO TRANSPORTISTA -->
-              {% elif request.user.type == "TRANSPORTISTA" %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Usuario Transportista
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                  <li>
-                    <a class="dropdown-item" href="{% url 'post_transport' %}" id="post_transport"><i class="icon fa-solid fa-circle-plus" id="icon"></i>Crear una publicacion de transporte</a>
-                  </li>
-
-                  <li>
-                    <a class="dropdown-item" href="{% url 'request' %}" id="requests"><i class="icon fa-solid fa-message"></i>Solicitudes de Clientes</a>
-                  </li>
-                  
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-
-                  <li>
-                    <a class="dropdown-item" href="#"><i class="icon fa-solid fa-user-pen"></i>Editar mi perfil</a>
-                  </li>
-
-                </ul>
-                    
-                {% elif user.is_superuser %}
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Usuario Administrador
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'profile' request.user.username %}" role="button" id="nav-link-profile">
+                    Mi Perfil 
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/customuser/add/">Crear usuario</a></li>
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/customuser/">Eliminar usuario</a></li>
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/customuser/">Modificar usuario</a></li>
-
-                    <li>
-                      <hr class="dropdown-divider">
+                </li>
+                
+                {% if request.user.type != "TRANSPORTISTA" %}
+                  {% if request.user.type == "CLIENTE EXTERNO" or request.user.type == "CLIENTE INTERNO" %}
+                    <li class="nav-item">
+                      <a class="nav-link" aria-current="page" href="{% url 'purchased_products'%}" id="nav-link-bank">Mi Producto</a>
                     </li>
 
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/profile/add/">Crear perfil de usuario</a></li>
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/profile/">Eliminar perfil de usuario</a></li>
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/profile/">Modificar perfil de usuario</a></li>
+                  {% endif %}
+                  <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'bank'%}" id="nav-link-bank">Mi Banco</a>
+                  </li>
 
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/post_product/add/">Crear publicacion</a></li>
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/post_product/">Eliminar publicacion</a></li>
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/post_product/">Modificar publicacion</a></li>
-
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin">Panel de administracion</a></li>
-
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Generar informe de venta</a></li>
-
-                  </ul>
+                {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'transport'%}" id="nav-link-bank">Mi Transporte</a>
+                  </li>
 
                 {% endif %}
-                </li>
-              <!-- USUARIO TRANSPORTISTA -->
+                <!-- USUARIO CONSULTOR -->
+                  {% if request.user.type == "CONSULTOR" %}
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuario Consultor
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Generar informe de venta</a></li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Editar mi perfil</a></li>
+                      </ul>
+                <!-- USUARIO CONSULTOR -->
 
-            </ul>
 
-            <div class="d-flex justify-content-around">
+                <!-- USUARIO CLIENTE EXTERNO -->
+                  {% elif request.user.type == "CLIENTE EXTERNO" %}
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuario Cliente Externo
+                      </a>
 
-              <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-                  <div class="d-flex justify-content-end">
-                    <form>
-                      <button class="btn btn-primary btn-danger btn-md px-5" type="submit" formaction="{% url 'logout' %}">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                      </button>
-                    </form>
-                  </div>
-                </li>
-              </ul>
-            </div>
 
-            {% else %}
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'home'%}">Inicio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'home'%}#about-us">Quiénes somos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'home'%}#locate-us">Localízanos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'home' %}#contact-form">Contáctanos</a>
-              </li>
 
-              <!--
-                  Se conserva privado por el momento
-                  **********************************
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'feed'%}">Publicaciones</a>
-                  </li>
-                
-              -->
-
-            </ul>
-
-            <div class="d-flex justify-content-around">
-
-              <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-
-                  <div class="d-flex justify-content-end">
-
-                    <form class="d-flex px-1">
-                      <button class="btn btn-outline-warning btn-md px-md-2" type="submit" formaction="{% url 'register' %}" id="btn-register">
-
-                        <span class="icon">
-                          <i class="fa-solid fa-sign-in"></i>
-                        </span>
-                        <span class="btn-text">
-                          Registrarse
-                        </span>
-                      </button>
-                    </form>
-
-                    <form class="d-flex px-1">
-                      <button class="btn btn-outline-success btn-md px-md-2" type="submit" formaction="{% url 'login' %}" id="btn-login">
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
                         
-                        <span class="icon">
-                          <i class="fa-solid fa-user-circle"></i>
-                        </span>
+                        <li>
+                          <a class="dropdown-item" href="{% url 'post_product' %}"><i class="icon fa-solid fa-circle-plus" id="icon"></i>Crear una publicacion</a>
+                        </li>
 
-                        <span class="btn-text">
-                          Iniciar sesion
-                        </span>
+                        <li>
+                          <a class="dropdown-item" href="{% url 'product_request' %}" type="submit"><i class="icon fa-solid fa-clipboard-list"></i>Crear una solicitud de producto</a>
+                        </li>
 
-                      </button>
-                    </form>
+                        <li>
+                          <a class="dropdown-item" href="{% url 'request' %}" type="submit"><i class="icon fa-solid fa-diagram-project"></i>Solicitudes</a>
+                        </li>
 
-                  </div>
-                </li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+
+                      </ul>
+                <!-- USUARIO CLIENTE EXTERNO -->
+
+
+                <!-- USUARIO CLIENTE INTERNO -->
+                  {% elif request.user.type == "CLIENTE INTERNO" %}
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuario Cliente Interno
+                      </a>
+
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        
+                        <li>
+                          <a class="dropdown-item" href="{% url 'post_product' %}"><i class="icon fa-solid fa-circle-plus" id="icon"></i>Crear una publicacion</a>
+                        </li>
+
+                        <li>
+                          <a class="dropdown-item" href="{% url 'product_request' %}" type="submit"><i class="icon fa-solid fa-clipboard-list"></i>Crear una solicitud de producto</a>
+                        </li>
+
+                        <li>
+                          <a class="dropdown-item" href="{% url 'request' %}" type="submit"><i class="icon fa-solid fa-diagram-project"></i>Solicitudes</a>
+                        </li>
+
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        
+                        <li>
+                          <a class="dropdown-item" href="#"><i class="icon fa-solid fa-user-pen"></i>Editar mi perfil</a>
+                        </li>
+                      </ul>
+                <!-- USUARIO CLIENTE INTERNO -->
+
+
+                <!-- USUARIO PRODUCTOR -->
+                  {% elif request.user.type == "PRODUCTOR" %}
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuario Productor
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li>
+                          <a class="dropdown-item" href="{% url 'post_product' %}" id="post_product"><i class="icon fa-solid fa-circle-plus" id="icon"></i>Crear una publicacion</a>
+                        </li>
+
+                        <li>
+                          <a class="dropdown-item" href="{% url 'request' %}" id="requests"><i class="icon fa-solid fa-message"></i>Solicitudes de Clientes</a>
+                        </li>
+                        
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                          <a class="dropdown-item" href="#"><i class="icon fa-solid fa-user-pen"></i>Editar mi perfil</a>
+                        </li>
+
+                      </ul>
+                <!-- USUARIO PRODUCTOR --> 
+
+
+                <!-- USUARIO TRANSPORTISTA -->
+                  {% elif request.user.type == "TRANSPORTISTA" %}
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuario Transportista
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li>
+                          <a class="dropdown-item" href="{% url 'post_transport' %}" id="post_transport"><i class="icon fa-solid fa-circle-plus" id="icon"></i>Crear una publicacion de transporte</a>
+                        </li>
+
+                        <li>
+                          <a class="dropdown-item" href="{% url 'request' %}" id="requests"><i class="icon fa-solid fa-message"></i>Solicitudes de Clientes</a>
+                        </li>
+                        
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                          <a class="dropdown-item" href="#"><i class="icon fa-solid fa-user-pen"></i>Editar mi perfil</a>
+                        </li>
+
+                      </ul>
+                      
+                  {% elif user.is_superuser %}
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuario Administrador
+                      </a>
+                      
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/customuser/add/">Crear usuario</a></li>
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/customuser/">Eliminar usuario</a></li>
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/customuser/">Modificar usuario</a></li>
+
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/profile/add/">Crear perfil de usuario</a></li>
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/profile/">Eliminar perfil de usuario</a></li>
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/profile/">Modificar perfil de usuario</a></li>
+
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/post_product/add/">Crear publicacion</a></li>
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/post_product/">Eliminar publicacion</a></li>
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/maipogrande/post_product/">Modificar publicacion</a></li>
+
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin">Panel de administracion</a></li>
+
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Generar informe de venta</a></li>
+                      </ul>
+                    {% endif %}
+                    </li>
+                <!-- USUARIO TRANSPORTISTA -->
 
               </ul>
-            </div>
+
+              <div class="d-flex justify-content-around">
+
+                <ul class="nav nav-pills nav-fill">
+                  <li class="nav-item">
+                    <div class="d-flex justify-content-end">
+                      <form>
+                        <button class="btn btn-primary btn-danger btn-md px-5" type="submit" formaction="{% url 'logout' %}">
+                          <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            {% else %}
+              <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="{% url 'home'%}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="{% url 'home'%}#about-us">Quiénes somos</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="{% url 'home'%}#locate-us">Localízanos</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="{% url 'home' %}#contact-form">Contáctanos</a>
+                </li>
+
+                <!--
+                    Se conserva privado por el momento
+                    **********************************
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="{% url 'feed'%}">Publicaciones</a>
+                    </li>
+                  
+                -->
+
+              </ul>
+
+              <div class="d-flex justify-content-around">
+
+                <ul class="nav nav-pills nav-fill">
+                  <li class="nav-item">
+
+                    <div class="d-flex justify-content-end">
+
+                      <form class="d-flex px-1">
+                        <button class="btn btn-outline-warning btn-md px-md-2" type="submit" formaction="{% url 'register' %}" id="btn-register">
+
+                          <span class="icon">
+                            <i class="fa-solid fa-sign-in"></i>
+                          </span>
+                          <span class="btn-text">
+                            Registrarse
+                          </span>
+                        </button>
+                      </form>
+
+                      <form class="d-flex px-1">
+                        <button class="btn btn-outline-success btn-md px-md-2" type="submit" formaction="{% url 'login' %}" id="btn-login">
+                          
+                          <span class="icon">
+                            <i class="fa-solid fa-user-circle"></i>
+                          </span>
+
+                          <span class="btn-text">
+                            Iniciar sesion
+                          </span>
+
+                        </button>
+                      </form>
+
+                    </div>
+                  </li>
+
+                </ul>
+              </div>
             {% endif %}
           </div>
 

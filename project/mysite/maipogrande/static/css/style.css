@@ -111,3 +111,16 @@ body {
   display: inline-block;
 }
 
+
+
+
+.text-title {
+  padding-top : 60px;
+  padding-bottom: 100px;
+}
+
+.card-profile {
+  padding-top : 10px;
+  padding-bottom: 15px;
+}
+

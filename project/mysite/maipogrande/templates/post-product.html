@@ -9,25 +9,35 @@
 
 
 
+<style>
 
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+    .card-profile {
+        padding-top : 10px;
+        padding-bottom: 15px;
+    }
+
+</style>
 
 <div class="row">
 
 
-    <div class="col-12">
-		<br></br>
-		<br></br>
+	<div class="col-12">
 
-        <h2 class ="h2 text-start text-dark">Crea una nueva publicacion</h2>
-        <br></br>
-        
+		<div class="p-3 mb-2 bg-dark text-white">
+			<h1 class="display-6 text-title text-center">Crea una nueva publicacion</h1>
+		</div>
+
 		<div class="card">
                 
 			<div class="card-body">
 
 				<div class="row">
 					<div class="col-sm-12 col-md-6 col-lg-8 col-xl-12">
-						<br></br>
                         <legend></legend>
 						<form action="" method="POST" enctype="multipart/form-data">
 							{% csrf_token %}
@@ -45,19 +55,22 @@
 											<tr>
 												{{ form.as_p }}
 					
+												<hr class = "featurette-divider"
+													style = "padding-top : 2px; background-color: white;">
+	
 												<div class="d-grid gap-2 col-6 mx-auto">
 													<button class="btn btn-primary btn-danger btn-lg text-white" type="submit" href="#" id="btn-post">
 														<i class="fa-solid fa-circle-plus"></i>
 														Publicar producto
 													</button>
-													<br></br>
 
 												</div>
-					
+												<hr class = "featurette-divider"
+												style = "padding-top : 10px; background-color: white;">
+	
 											</tr>
 										</tbody>
 									</table>
-									<br></br>
 
 								</div>
 							</div>

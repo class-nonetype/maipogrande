@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
+# Roles de usuarios
 USER_TYPE = (
     ('PRODUCTOR', 'PRODUCTOR'),
     ('CONSULTOR', 'CONSULTOR'),
@@ -12,12 +13,14 @@ USER_TYPE = (
     ('TRANSPORTISTA', 'TRANSPORTISTA'),
 )
 
+# Estados de oferta
 OFFER_STATUS = (
 	('PENDIENTE', 'PENDIENTE'),
 	('APROBADO', 'APROBADO'),
 	('RECHAZADO', 'REFHAZADO'),
 )
 
+# Tipos de transporte
 TYPE_TRANSPORT = (
     ('AVION', 'AVION'),
     ('AVIONETA', 'AVIONETA'),
@@ -29,6 +32,7 @@ TYPE_TRANSPORT = (
     ('AUTO', 'AUTO'),
 )
 
+# Tipos de cuenta bancaria
 TYPE_BANK_ACCOUNT = (
 	('CUENTA CORRIENTE', 'CUENTA CORRIENTE'),
 	('CUENTA AHORRO', 'CUENTA AHORRO'),
@@ -37,6 +41,7 @@ TYPE_BANK_ACCOUNT = (
 	('CHEQUERA ELECTRONICA', 'CHEQUERA ELECTRONICA'),
 )
 
+# Nombres de bancos
 BANK_NAMES = (
     ('BANCO ESTADO', 'BANCO ESTADO'),
     ('MERCADO PAGO', 'MERCADO PAGO'),
@@ -61,16 +66,19 @@ BANK_NAMES = (
     ('BANCO DE CHILE', 'BANCO DE CHILE'),
 )
 
+# Estados de contrato
 CONTRACT_STATUS = (
     ('EN PROCESO', 'EN PROCESO'),
     ('FINALIZADO', 'FINALIZADO'),
 )
 
+# Respuestas
 ANSWER = (
 	('SI', 'SI'),
 	('NO', 'NO'),
 )
 
+# Paises
 COUNTRY = [
     ('US', 'United States'),
     ('AF', 'Afghanistan'),
@@ -306,20 +314,21 @@ COUNTRY = [
 ]
 
 
-# Modelo de usuario
+# Modelo personalizado del usuario
 class CustomUser(AbstractUser):
-	type = models.CharField(max_length = 15, choices = USER_TYPE, default = '')
+
+	type = models.CharField(max_length = 15, choices = USER_TYPE, default = 'CLIENTE EXTERNO')
 	country = models.CharField(max_length = 20, choices = COUNTRY, default = '')
 
 
 # Modelo del perfil de usuario
 class Profile(models.Model):
+
 	user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
-	image = models.ImageField(default = 'user.png')
+	image = models.ImageField(default = 'media/profile/user.ico')
 	
-    
 	def __str__(self):
-		return f'Perfil de {self.user.username}'
+		return f'Perfil : {self.user.username}'
 
 	def following(self):
 		user_ids = Relationship.objects.filter(from_user = self.user).values_list('to_user_id', flat = True)
@@ -333,21 +342,22 @@ class Profile(models.Model):
 
 
 # Modelo de publicacion de producto
-class Post(models.Model):
-	timestamp = models.DateTimeField(default = timezone.localtime(timezone.now()).strftime("%Y-%m-%d %H:%M:%S"))
-	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
-	title = models.CharField(max_length=300, blank = True)
-	description = models.TextField(max_length=1000, blank = True)
-	price = models.IntegerField(validators = [MinValueValidator(1000), MaxValueValidator(1000000000)])
-	quantity = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(1000)])
-	image = models.ImageField(upload_to='media/post/', null=True)
+class Product(models.Model):
+    
+    timestamp = models.DateTimeField(default = timezone.localtime(timezone.now()).strftime("%Y-%m-%d %H:%M:%S"))
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
+    title = models.CharField(max_length=300, blank = True)
+    description = models.TextField(max_length=1000, blank = True)
+    price = models.IntegerField(validators = [MinValueValidator(100), MaxValueValidator(1000000000)])
+    quantity = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(1000)])
+    image = models.ImageField(upload_to='media/post/product/', null=True)
+    owner_full_name = models.CharField(max_length = 100, blank = True)
+    
+    def __str__(self):
+        return f'Producto : {str(self.title).upper()}'
 
-	class Meta:
-		ordering = ['-timestamp', 'price']
-
-	def __str__(self):
-		return f'{self.user.username} : {self.title}'
-
+    class Meta:
+        ordering = ['-timestamp', 'price']
 
 # Modelo de relacion entre los usuarios
 class Relationship(models.Model):
@@ -355,7 +365,7 @@ class Relationship(models.Model):
 	to_user = models.ForeignKey(CustomUser, related_name='related_to', on_delete=models.CASCADE)
 
 	def __str__(self):
-		return f'{self.from_user} to {self.to_user}'
+		return f'Interes : {str(self.from_user).upper()} - {str(self.to_user).upper()}'
 
 	class Meta:
 		indexes = [
@@ -365,6 +375,7 @@ class Relationship(models.Model):
 
 # Modelo del contacto
 class Contact(models.Model):
+    
     id_request = models.AutoField(primary_key=True, editable=False)
     first_name = models.CharField(max_length=60, blank = True)
     last_name = models.CharField(max_length=60, blank = True)
@@ -378,11 +389,12 @@ class Contact(models.Model):
         ordering = ['-timestamp']
     
     def __str__(self):
-        return f'Solicitud #{self.id_request} - {self.first_name} {self.last_name} : {self.subject}'
+        return f'Solicitud #{self.id_request} : {str(self.first_name).upper()} {str(self.last_name).upper()} : {str(self.subject).upper()}'
 
 
 # Modelo del contrato
 class Contract(models.Model):
+
 	id_contract = models.AutoField(primary_key = True, editable = False)
 	image = models.ImageField(upload_to='media/contract/', null = True)
 	rut = models.CharField(max_length = 12, blank = True)
@@ -400,6 +412,7 @@ class Contract(models.Model):
 
 # Modelo de cuenta bancaria del usuario
 class BankAccount(models.Model):
+
 	id_bank_account = models.AutoField(primary_key = True, editable = False)
 	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name = 'banks')
 	bank_name = models.CharField(max_length = 50, choices = BANK_NAMES, default = '')
@@ -412,14 +425,15 @@ class BankAccount(models.Model):
 		ordering = ['bank_name']
 
 	def __str__(self):
-		return f'{self.bank_name} - {self.type_bank_account}'
+		return f'Banco {str(self.bank_name).upper()} : {str(self.type_bank_account).upper()}'
 
 
 # Modelo de solicitud de producto
 class ProductRequest(models.Model):
+
 	id_product_request = models.AutoField(primary_key = True, editable = False)
-	timestamp = models.DateTimeField(default=timezone.now)
-	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='product_request')
+	timestamp = models.DateTimeField(default = timezone.now)
+	user = models.ForeignKey(CustomUser, on_delete = models.CASCADE, related_name = 'product_request')
 	title = models.CharField(max_length=300, blank = True)
 	description = models.TextField(max_length=1000, blank = True)
 	quantity = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(1000)])
@@ -430,12 +444,13 @@ class ProductRequest(models.Model):
 		ordering = ['-timestamp']
 
 	def __str__(self):
-		return f'Solicitud de producto #{self.user.username} : {self.title}'
+		return f'Solicitud de producto #{self.id_product_request} : {str(self.title).upper()}'
 
 
 # Modelo del estado de solicitud del producto
 class ProductRequestStatus(models.Model):
-	#id_offered_product = models.ForeignKey(ProductRequest, on_delete = models.CASCADE)
+
+	#id_offered_product = models.ForeignKey(ProductRequest, on_delete = models.CASCADE, related_name = 'offered_product')
 	id_offered_product = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(10000000000)])
 
 	timestamp = models.DateTimeField(default=timezone.now)
@@ -447,13 +462,13 @@ class ProductRequestStatus(models.Model):
 		ordering = ['-timestamp']
 
 	def __str__(self):
-		return f'Estado de la solicitud del producto #{self.id_offered_product} : {self.status}'
+		return f'Estado de la solicitud del producto #{self.id_offered_product} : {str(self.status).upper()}'
 
 
 # Modelo de transaccion de venta 
 class Transaction(models.Model):
+
     id_transaction = models.AutoField(primary_key = True, editable = False)
-    id_offered_product = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(10000000000)])
     timestamp = models.DateTimeField(default = timezone.localtime(timezone.now()).strftime("%Y-%m-%d %H:%M:%S"))
 
     product = models.CharField(max_length=300, blank = True)
@@ -478,9 +493,10 @@ class Transaction(models.Model):
 
 # Modelo de transporte
 class Transport(models.Model):
+
     timestamp = models.DateTimeField(default = timezone.localtime(timezone.now()).strftime("%Y-%m-%d %H:%M:%S"))
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='transport')
-    image = models.ImageField(upload_to='media/post/', null=True)
+    image = models.ImageField(upload_to='media/post/transport/', null=True)
     type = models.CharField(max_length = 30, blank = True, choices = TYPE_TRANSPORT, default = 'CAMION')
     patent = models.CharField(max_length=300, blank = True)
     size = models.CharField(max_length=300, blank = True)
@@ -492,6 +508,6 @@ class Transport(models.Model):
         ordering = ['timestamp', 'type']
     
     def __str__(self):  
-        return f'{self.user.username} : {self.type} - {self.patent}'
+        return f'Transporte {str(self.type).upper()} #{self.patent} : {self.user.username}'
 
 		

@@ -1,46 +1,15 @@
 import os
 import platform
 
-SYSTEM = platform.system()
 
-REQUIREMENTS = [
-    'Django',
-    'Pillow',
-    'djangorestframework',
-    'numpy'
-]
 
 EXCEPTIONS = []
 
 PROJECT_DIRECTORY_PATH = os.getcwd()
 
-index = 0
-
-for requirement in REQUIREMENTS:
-    index +=1
-
-    print(f'\n[ {index} | {len(REQUIREMENTS)} ]\tInstalling {requirement}...\n')
-
-    try:
-        if SYSTEM == 'Windows':
-
-            MYSITE_DIRECTORY_PATH = PROJECT_DIRECTORY_PATH + '\\' + 'mysite'
-            MAIPOGRANDE_DIRECTORY_PATH = MYSITE_DIRECTORY_PATH + '\\' + 'maipogrande'
-            MANAGE_FILE_PATH = MYSITE_DIRECTORY_PATH + '\\' + 'manage.py'
-
-            os.system(f'pip install {requirement} && cls')
-        
-        elif SYSTEM == 'Linux':
-
-            MYSITE_DIRECTORY_PATH = PROJECT_DIRECTORY_PATH + '/' + 'mysite'
-            MAIPOGRANDE_DIRECTORY_PATH = MYSITE_DIRECTORY_PATH + '/' + 'maipogrande'
-            MANAGE_FILE_PATH = MYSITE_DIRECTORY_PATH + '/' + 'manage.py'
-
-            os.system(f'pip3 install {requirement} && clear')
-            
-    except Exception as exc:
-        EXCEPTIONS.append(exc)
-        pass
+MYSITE_DIRECTORY_PATH = PROJECT_DIRECTORY_PATH + '/' + 'mysite'
+MAIPOGRANDE_DIRECTORY_PATH = MYSITE_DIRECTORY_PATH + '/' + 'maipogrande'
+MANAGE_FILE_PATH = MYSITE_DIRECTORY_PATH + '/' + 'manage.py'
 
 PROPERTY = {
     'project' : {
@@ -63,12 +32,16 @@ _  /  / / / /_/ /_  / __  /_/ / /_/ /     / /_/ / _  /   / /_/ /_  / / / /_/ / /
 ========================================================================================
 '''
 
-print(LOGO)
 
 for value in PROPERTY.values():
-
-    if SYSTEM == 'Windows':
-        os.system(f'''python "{value['manage']}" runserver''')
+    print(LOGO)
+    os.system(f'''python3 "{value['manage']}" makemigrations maipogrande''')
+    os.system('cls')
     
-    elif SYSTEM == 'Linux':
-        os.system(f'''python3 "{value['manage']}" runserver''')
+    print(LOGO)
+    os.system(f'''python3 "{value['manage']}" migrate''')
+    os.system('cls')
+
+    print(LOGO)
+    os.system(f'''python3 "{value['manage']}" runserver 0:8000''')
+    os.system('cls')
