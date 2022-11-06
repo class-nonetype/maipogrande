@@ -14,6 +14,12 @@ from pathlib import Path
 import os
 
 
+import cx_Oracle
+
+cx_Oracle.init_oracle_client(
+    lib_dir = r'/opt/oracle/instantclient_21_4'
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -87,8 +93,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME' : 'ORCL',
+        'USER' : 'admin',
+        'PASSWORD' : '1q2w3e4r5tt',
+        'HOST' : 'oracle.c81tzrvyie2p.us-east-1.rds.amazonaws.com',
+        'PORT' : '1521'
     }
 }
 
