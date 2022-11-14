@@ -1,0 +1,278 @@
+{% extends './feed.html' %}
+
+{% load static %}
+{% load humanize %}
+{% block content %}
+{% if request.user.is_authenticated %}
+
+
+
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+</style>
+
+
+
+
+<div class="row">
+
+
+    <div class="col-12">
+        <div class="p-3 mb-2 bg-dark text-white text-center">
+            <h1 class="display-6 text-title">Solicitudes</h1>
+
+            {% if product_request.count > 0 %}
+                <div class="mb-2bg-white text-white" style="padding-top: 100px; padding-bottom: 100px;">
+                    
+                    {% if product_request.count == 1 %}
+                        <h1 class="display-6 text-start" id="available-request">{{ product_request.count }} Solicitud disponible</h1>
+
+                    {% elif product_request.count > 1 %}
+                        <h1 class="display-6 text-start" id="available-request">{{ product_request.count }} Solicitudes disponibles</h1>
+
+                    {% endif %}
+                </div>
+
+            {% elif product_request.count == 0 %}
+                <div class="mb-2bg-white text-white" style="padding-top: 100px; padding-bottom: 100px;">
+                    <h1 class="display-6 text-center" id="available-account">No hay solicitudes disponibles por el momento ☹</h1>
+                </div>
+		    {% endif %}
+
+
+
+            <div class="mb-2bg-white text-white" style="padding-top: 50px; padding-bottom: 10px;">
+
+                {% for product in product_request %}
+                    <div class="table-responsive py-4">
+                        <table class="table table-striped">
+                            <tbody>
+            
+                                <tr>
+                                    <div class="container-article">
+                                            
+                                        <div>
+            
+                                            <div class="card text-white text-end bg-dark mb-3" style="max-width: 100%;">
+                                                <div class="card-header">
+            
+            
+                                                    {% if request.user.type == "PRODUCTOR" or request.user.type == "TRANSPORTISTA"%}
+
+                                                        <div class="pagination" style="padding-bottom : 60px;">
+                                                            <span class="step-links">
+                                                                {% if product_request.has_previous %}
+                                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page=1'" type="button">
+                                                                        <i class="fa-solid fa-angle-left"></i>
+                                                                    </button>
+                
+                                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ product_request.previous_page_number }}'" type="button">
+                                                                        <i class="fa-solid fa-angle-double-left"></i>
+                                                                    </button>
+
+
+                                                                {% endif %}
+                                                        
+                                                                <span class="current">
+                                                                    Solicitud {{ product_request.number }} de {{ product_request.paginator.num_pages }}.
+                                                                </span>
+                                                        
+                                                                {% if product_request.has_next %}
+                                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ product_request.next_page_number }}'" type="button">
+                                                                        <i class="fa-solid fa-angle-right"></i>
+                                                                    </button>
+                
+                                                                    <button class="btn btn-outline-success btn-md px-md-4" onclick="location.href='?page={{ product_request.paginator.num_pages }}'" type="button">
+                                                                        <i class="fa-solid fa-angle-double-right"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    {% endif %}
+
+
+                                                    <h2 class="h2 text-start text-light">
+                                                        Solicitud <span class="text-muted">{{ product.title }}</span>
+                                                    </h2>
+                                                </div>
+                                                    
+                                                <div class="card-body">
+            
+                                                    <div class="row">
+                                                            
+                                                        <div class="col-sm">
+
+                                                            <h6 class="h6 text-start text-success">Publicado {{ product.timestamp|naturaltime }}</h6>
+
+
+                                                            <h6 class="h6 text-start">Usuario <a class="text-warning" href="{% url 'profile' product.user.username %}" style="text-decoration:none">{{ product.user.username }}</a> </h6>
+                                                            <h6 class="h6 text-start">ID usuario <span class="text-muted">{{ product.user_id }}</span></h6>
+                                                            
+                                                            <h6 class="h6 text-start">Nombre del Cliente <span class="text-muted">{{ user.first_name }} {{ user.last_name }}</span></h6>
+                                                            <h6 class="h6 text-start">Kilogramos solicitados <span class="text-muted">{{ product.quantity }} kg</span></h6>
+                                                            <h6 class="h6 text-start">Descripcion <span class="text-muted  text-uppercase">{{ product.description }}</span></h6>
+                                                            <h6 class="h6 text-start">Fecha solicitada <span class="text-muted">{{ product.requested_date }}</span></h6>
+                                                            <h6 class="h6 text-start">Requiere de cuidados de temperatura <span class="text-muted">{{ product.temperature_care }}</span></h6>
+                                                            <h6 class="h6 text-start">Localidad de entrega <span class="text-muted text-uppercase">
+                                                                {{ product.delivery_place_city }}, {{ product.delivery_place_address }} #{{ product.delivery_address_number }}
+                                                            </span></h6>
+
+                                                            {% if request.user.type == "PRODUCTOR" %}
+                                                                
+                                                                <div class="d-flex flex-row-reverse">
+                                                                    <div class="input-group" style="padding-top: 10%;">
+                                                                        <select class="form-select bg-transparent text-white" id="product-select" aria-label="Selecciona un producto">
+                                                                            <option disable selected value="">Selecciona un producto</option>
+                
+                                                                            {% for product in product_post %}
+                                                                            
+                                                                                <option value="{{ product.id }}">{{ product.title }}</option>
+                
+                                                                            {% endfor %}
+                                                                            
+                                                                        </select>
+
+                                                                        <style>
+                                                                            select {
+                                                                                padding: 5px;
+                                                                                color: #222222;
+                                                                                font-size: 12px;
+                                                                                background: transparent;
+                                                                                -webkit-appearance: none;
+
+                                                                            }
+                                                                            select option{
+                                                                                background-color: #222222;
+                                                                            }
+                                                                        </style>
+                
+                
+                
+                                                                        <script type="text/javascript">
+                
+                                                                            function sendSelectedProduct() {
+                                                                                var selectedProduct = document.getElementById("product-select");
+                                                                                var valueSelectedProduct = selectedProduct.value;
+                                                                                var textSelectedProduct = selectedProduct.options[selectedProduct.selectedIndex].text;
+
+                                                                                var url = "{% url 'offer_product'  id_offered_product=0 id_product_request=product.user_id %}";
+
+                                                                                
+                                                                                swal(
+                                                                                    {
+                                                                                        title : "PRODUCTO OFRECIDO",
+
+                                                                                        text : "Se ha realizado correctamente la oferta de producto" + "\n" + "\n" +
+
+                                                                                            "Detalle de oferta" + "\n" +
+                                                                                            "Producto " + textSelectedProduct + "\n" +
+                                                                                            "ID Producto " + valueSelectedProduct + "\n"+ "\n",
+                                                                                        icon : "success",
+                                                                                        buttons : false
+                                                                                    }
+                                                                                );
+
+
+
+                                                                                url = url.replace('0', valueSelectedProduct);
+
+                                                                                document.location.href = url;
+                
+                                                                            };
+                
+                                                                        </script>
+                
+                                                                        <button class="btn btn-success btn-group-sm" type="submit" id="btn-offer-product" onclick="sendSelectedProduct()">
+                                                                            <span class="icon">
+                                                                                <i class="fa-solid fa-check"></i>
+                                                                            </span>
+                                                                    
+                                                                            <span class="btn-text">
+                                                                                Ofrecer producto
+                                                                            </span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+            
+
+
+                                                            {% elif request.user.type == "TRANSPORTISTA" %}
+                                                                
+                                                                <div class="d-flex flex-row-reverse">
+                                                                    <div class="input-group" style="padding-top: 10%;">
+
+                                                                        <a class="btn btn-success btn-group-sm"
+                                                                            type="submit"
+                                                                            id="btn-offer-transport"
+                                                                            href="{% url 'offer_transport' id_transaction=product.id_transaction id_product=product.id_product %}" >
+                                                                            <span class="icon">
+                                                                                <i class="fa-solid fa-truck-fast"></i>
+                                                                            </span>
+                                                                    
+                                                                            <span class="btn-text">
+                                                                                Ofrecer transporte
+                                                                            </span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            {% elif request.user.type == "CLIENTE EXTERNO" or request.user.type == "CLIENTE INTERNO" %}
+                                                                <div class="d-flex flex-row-reverse">
+                                                                    <div class="input-group" style="padding-top: 10%;">
+
+                                                                        <a class="btn btn-success btn-group-sm"
+                                                                            type="submit"
+                                                                            id="btn-offer-transport"
+                                                                            href="{% url 'client_requests_status' product.user_id %}" >
+                                                                            <span class="icon">
+                                                                                <i class="fa-solid fa-truck-fast"></i>
+                                                                            </span>
+                                                                    
+                                                                            <span class="btn-text">
+
+                                                                                Ver ofertas de productos
+                                                                            </span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            {% endif %}
+
+
+
+
+
+                                                        </div>
+            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+
+
+
+            </div>
+
+
+
+
+        </div>
+
+
+    
+
+    </div>
+</div>
+{% endif %}
+{% endblock %}

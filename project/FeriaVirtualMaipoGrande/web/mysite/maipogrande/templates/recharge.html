@@ -1,0 +1,305 @@
+{% extends './layout.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+
+    #searcher {
+		padding-top: 50px;
+		padding-bottom: 100px;
+	}
+    
+    
+</style>
+
+<script>
+
+    var countBankAccount= "{{ bank_account.count }}";
+    var userType = "{{ request.user.type }}";
+
+    if (userType == "CLIENTE EXTERNO"){
+        if (countBankAccount == "0") {
+            swal(
+                    {
+                        title: "ERROR - NO HAY CUENTA BANCARIA",
+                        text : "Usted no posee de una cuenta bancaria para realizar compras, por favor vincule una",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true
+                    }).then((willDelete) => {
+                        if (willDelete) {
+                            document.location.href = "{% url 'bank_account' %}";
+                        }
+                    }
+            );
+        }
+    } else {
+        if (userType == "CLIENTE INTERNO") {
+            if (countBankAccount == "0") {
+                swal(
+                        {
+                            title: "ERROR - NO HAY CUENTA BANCARIA",
+                            text : "Usted no posee de una cuenta bancaria para realizar compras, por favor vincule una",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true
+                        }).then((willDelete) => {
+                            if (willDelete) {
+                                document.location.href = "{% url 'bank_account' %}";
+                            }
+                        }
+                );
+            }
+        }
+    }
+
+
+
+</script>
+        
+<div class="row" id="row-product-sale">
+
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> <!-- 4 -->
+
+
+
+		<div class="p-3 mb-2 bg-dark text-white">
+			<h1 class="display-6 text-title text-center">MiRecarga</h1>
+
+
+
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 bg-dark text-white">
+
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
+
+                    <div class="table-responsive py-4">
+                        <table class="table table-striped">
+                            
+                            <tbody>
+        
+                                <tr>
+                                    <div class="container-article">
+                                        
+                                        <div class="product-sale">
+        
+        
+                                            <div class="card text-white bg-dark mb-3" style="max-width: 100%; max-height : auto;">
+                                                <div class="card-header">
+                                                    <h2 class="h2 text-start text-light">Recarga tu saldo</h2>
+                                                </div>
+                                                
+                                                <div class="card-body">
+        
+                                                    <div class="row">
+
+
+
+
+
+
+                                                        <div class="mb-3">
+                                                            <div class="mb-3">
+                                                                <div class="bg-dark text-white" style="padding-top:20px; padding-bottom: 40px;">
+                                                                    <h1 class="display-6 text-center" style="padding-top: 20px;">Cuenta bancaria</h1>
+                                                                </div>
+
+
+
+                                                                <div class="mb-3">
+                                                                    <label class="form-label h6 text-start" for="bank-select">Cuenta bancaria</label>
+                                                                    <hr class = "featurette-divider bg-transparent">
+
+    
+                                                                    <select class="form-select bg-transparent text-white" id="bank-select" aria-label="Selecciona una cuenta bancaria" onchange="sendSelectedBank()">
+                                                                        <option disable selected value="">Selecciona un banco</option>
+                
+                                                                            {% for bank in bank_account %}
+                                                                            
+                                                                                <option value="{{ bank.id_bank_account }}" id="bank-option">
+                                                                                    
+                                                                                    {{ bank.bank_account_number}} {{ bank.bank_name }} - {{ bank.type_bank_account }}
+
+                                                                                </option>
+                                                                            {% endfor %}
+
+                                                                    </select>
+                                                                    <style>
+                                                                        select {
+                                                                            padding: 5px;
+                                                                            color: #222222;
+                                                                            font-size: 12px;
+                                                                            background: transparent;
+                                                                            -webkit-appearance: none;
+
+                                                                        }
+                                                                        select option{
+                                                                            background-color: #222222;
+                                                                        }
+                                                                    </style>
+
+                                                                    <hr class = "featurette-divider bg-transparent"
+                                                                        style="padding-top: 20px;">
+
+
+                                                                    <div class="mb-3">
+
+
+                                                                        <label class="form-label h6 text-start" for="bank-select">ID Cuenta bancaria</label>
+                                                                        <hr class = "featurette-divider bg-transparent">
+                                                                        
+                                                                        <input name="input-bank-id"
+                                                                                class="form-select bg-transparent text-white" 
+                                                                                id="input-bank-id"
+                                                                                disabled
+                                                                                style="text-align : end;">
+                                                                            
+                                                                    </div>
+
+                                                                <hr class = "featurette-divider bg-transparent">
+
+                                                                    <script>
+                                                                        function sendSelectedBank() {
+                                                                            var selectedBank = document.getElementById("bank-select");
+                                                                            var valueSelectedBank = selectedBank.value;
+            
+                                                                            var textSelectedBank = selectedBank.options[selectedBank.selectedIndex].text;
+
+                                                                            var input_bank_id = document.getElementById('input-bank-id');
+                                                                            var input_bank_amount = document.getElementById('input-bank-amount');
+
+    
+                                                                            input_bank_id.value = valueSelectedBank;
+            
+                                                                        }
+            
+                                                                    </script>
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                        </div>
+
+
+
+
+
+                                                        <div class="col-sm">
+
+                                                            <hr class = "featurette-divider bg-transparent">
+                                                            <div class="col-12">
+                                                            
+                                                                <div class="mb-3">
+                                                                    <div class="bg-dark text-white" style="padding-top:20px; padding-bottom: 40px;">
+                                                                        <h1 class="display-6 text-center" style="padding-top: 20px;">Saldo a recargar</h1>
+                                                                    </div>
+                                                                    
+                                                                    <hr class = "featurette-divider bg-transparent">
+
+                                                                    <label class="form-label h6 text-start" for="input-quantity">Cantidad a recargar</label>
+                                                                    <hr class = "featurette-divider bg-transparent">
+
+                                                                    <input name="input-quantity"
+                                                                        type="number"
+                                                                        min="1000"
+                                                                        max="999999999"
+                                                                        class="form-control bg-transparent text-white"
+                                                                        placeholder="Ingresa la cantidad a recargar"
+                                                                        id="input-quantity"
+                                                                        onkeyup=getMinMaxQuantityValue(this)
+                                                                        style="text-align : end;">
+                                                                </div>
+
+                                                            </div>
+                                                            
+
+                                                            <hr class = "featurette-divider bg-transparent">
+                                                            <hr class = "featurette-divider bg-transparent">
+
+
+
+                                                            <div class="mb-3">
+                                                                
+                                                                
+                                                                <hr class = "featurette-divider bg-transparent">
+
+
+                                                                <div class="d-grid gap-2 col-6 mx-auto">
+
+                                                                    <a class="btn btn-outline-success " 
+                                                                        id="btn-recharge"
+                                                                            href="javascript:recharge();"
+                                                                            style="border-radius: 20px;">
+                
+                                                                        <span class="icon">
+                                                                            <i class="fa-solid fa-dollar-sign"></i>
+                                                                        </span>
+                                                                    
+                                                                        <span class="btn-text">
+                                                                            Recargar saldo
+                                                                        </span>
+                                                                    </a>
+                
+                                                                </div>
+                                                            </div>
+
+
+                                                            <script>
+                
+                                                                function recharge() {
+
+                                                                    var rechargeAmount = document.getElementById("input-quantity").value;
+                                                                    var availableBankID = document.getElementById("input-bank-id").value;
+
+                                                                    var url = "{% url 'recharge_amount' id_bank=0 recharge_amount=1 %}#available-account";
+                                                                    
+                                                                    url = url.replace('0', availableBankID);
+                                                                    url = url.replace('1', rechargeAmount);
+                                                                    document.location.href = url;
+
+                                                                };
+
+                                                            </script>
+
+
+                                                            <script>
+                                                                function getMinMaxQuantityValue(el) {
+                                                                    if (el.value != "") {
+                                                                        if (parseInt(el.value) < parseInt(el.min)) {
+                                                                            el.value = el.min;
+                                                                        }
+                                                                        if (parseInt(el.value) > parseInt(el.max)) {
+                                                                            el.value = el.max;
+                                                                        }
+                                                                    }
+                                                                };
+                                                            </script>
+
+
+                                                            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
