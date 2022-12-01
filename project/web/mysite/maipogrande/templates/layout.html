@@ -1,0 +1,35 @@
+{% extends './base.html' %}
+
+{% load humanize %}
+
+
+
+
+
+{% block body%}
+<div class="container marketing">
+
+  
+  {% block content %}
+
+
+  
+    {% for content in posts %}
+    
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="content">
+            {{ content.content }}
+          </div>
+
+          </div><!-- /.col-lg-4 -->
+        </div><!-- /.row -->
+      {% endfor %}
+  </div>
+  {% endblock %}
+
+</div><!-- /.container -->
+{% endblock %}
+
+
+

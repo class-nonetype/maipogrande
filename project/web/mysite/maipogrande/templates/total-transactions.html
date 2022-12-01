@@ -1,0 +1,66 @@
+{% extends './layout.html' %}
+{% block content %}
+{% load humanize %}
+{% load static %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+    .card-profile {
+        padding-top : 10px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-12">
+        
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+
+			<h1 class="display-6 text-title text-center">Ganancias</h1>
+
+
+			<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 bg-dark text-white">
+
+				<div class="card bg-dark">
+                                        
+                    <div class="card-body">
+
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <div class = "form-group">
+                                    <div class="mb-3">
+                                        <label for="total-transaction" class="form-label">Ganancias generadas por las ventas </label>
+                                        <input type="text" id="total-transaction" class="form-control bg-transparent text-white" value="{{ total }}" readonly>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr class = "featurette-divider"
+                    style = "padding-top : 5px; padding-bottom: 20px; background-color: transparent;">
+
+			</div>
+
+
+
+
+		</div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+

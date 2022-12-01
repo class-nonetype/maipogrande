@@ -1,0 +1,277 @@
+{% extends './feed.html' %}
+
+{% load static %}
+{% load humanize %}
+{% block content %}
+{% if request.user.is_authenticated %}
+
+
+
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+</style>
+
+
+
+
+<div class="row">
+
+
+    <div class="col-12">
+        <div class="p-3 mb-2 bg-dark text-white text-center">
+            <h1 class="display-6 text-title">Solicitudes</h1>
+
+
+
+
+            <div class="mb-2bg-white text-white" style="padding-top: 50px; padding-bottom: 10px;">
+
+
+                {% for transaction in transactions %}
+                    {% for product in products %}
+
+
+                        <div class="p-3 mb-2 bg-dark text-white">
+                
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 bg-dark text-white">
+                
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
+                
+                                    <div class="table-responsive py-4">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            
+                                            <tbody>
+                        
+                                                <tr>
+                                                    <div class="container-article">
+                                                        
+                                                        <div class="product-sale">
+                        
+                        
+                                                            <div class="card text-white bg-dark mb-3" style="max-width: 100%; max-height : auto;">
+                                                                <div class="card-header">
+                                                                    <h2 class="h2 text-start text-light">Producto <span class="text-muted">{{ product.title }}</span></h2>
+                                                                </div>
+                                                                
+                                                                <div class="card-body">
+                        
+                                                                    <div class="row">
+                                                                        <div class="col-sm">
+                                                                            <div class="col-12">
+                                                                                {% if product.image %}
+                                                                                    <img class="card-img img-fluid" id="img-product" src="{{ product.image.url }}" alt="" style="max-width : 600px; max-height : 300px">
+                                                                                {% endif %}
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                        <div class="col-sm">
+                                                                            <h6 class="h6 text-start">Publicado hace <span class="text-muted">
+                                                                                <i class="clock"></i>
+                                                                                <time data-time="#">{{ product.timestamp|naturaltime }}</time>
+                                                                            </span></h6>
+                
+                                                                            <hr class = "featurette-divider">
+                
+                                                                            
+                                                                            <div class="mb-3">
+                
+                
+                                                                                <label class="form-label h6 text-start" for="input-seller">Nombre del vendedor</label>
+                                                                                
+                                                                                <input name="input-seller"
+                                                                                        class="form-control bg-transparent text-white"
+                                                                                        id="input-seller"
+                                                                                        value="{{ transaction.producer }}"
+                                                                                        disabled
+                                                                                        style="text-align : end;">
+                                                                            </div>
+                
+                
+                                                                            <div class="mb-3">
+                
+                
+                                                                                <label class="form-label h6 text-start" for="input-buyer">Nombre del comprador</label>
+                                                                                
+                                                                                <input name="input-buyer"
+                                                                                        class="form-control bg-transparent text-white"
+                                                                                        id="input-buyer"
+                                                                                        value="{{ transaction.client }}"
+                                                                                        disabled
+                                                                                        style="text-align : end;">
+                                                                            </div>
+                
+                                                                            <div class="mb-3">
+                                                                                <div class="bg-dark text-white" style="padding-top:20px; padding-bottom: 40px;">
+                                                                                    <h1 class="display-6 text-center">Detalle</h1>
+                                                                                </div>
+                
+                                                                                <div class="mb-3">
+                                                                                    <label class="form-label h6 text-start" for="input-price">Precio (kg)</label>
+                                
+                                                                                    <input name="input-price"
+                                                                                        class="form-control bg-transparent text-white"
+                
+                                                                                        value="{{ transaction.price }}"
+                                                                                        id="input-price"
+                                                                                        disabled
+                                                                                        style="text-align : end;">
+                                                                                </div>
+                                                                                
+                                                                                <div class="mb-3">
+                                                                                    <label class="form-label h6 text-start" for="input-stock">Cantidad (kg) comprados</label>
+                                
+                                                                                    <input name="input-stock"
+                                                                                        class="form-control bg-transparent text-white"
+                                                                                        value="{{ transaction.quantity }}"
+                                                                                        id="input-stock"
+                                                                                        disabled
+                                                                                        style="text-align : end;">
+                                                                                </div>
+                
+                                                                            </div>
+                                                                            
+                
+                                                                            <div class="mb-3">
+                                                                                <div class="mb-3">
+                                                                                    <div class="bg-dark text-white" style="padding-top:20px; padding-bottom: 40px;">
+                                                                                        <h1 class="display-6 text-center" style="padding-top: 20px;">Transporte</h1>
+                                                                                    </div>
+                
+                
+                
+                                                                                    <div class="d-flex flex-row-reverse">
+                                                                                        <div class="input-group" style="padding-top: 10%;">
+                                                                                            <select class="form-select bg-transparent text-white" id="transport-select" aria-label="Selecciona un transporte">
+                                                                                                <option disable selected value="">Selecciona un transporte</option>
+                                    
+                                                                                                {% for transport in transports %}
+                                                                                                
+                                                                                                    <option value="{{ transport.id }}">{{ transport.type }} {{ transport.patent }}</option>
+                                    
+                                                                                                {% endfor %}
+                                                                                                
+                                                                                            </select>
+                    
+                                                                                            <style>
+                                                                                                select {
+                                                                                                    padding: 5px;
+                                                                                                    color: #222222;
+                                                                                                    font-size: 12px;
+                                                                                                    background: transparent;
+                                                                                                    -webkit-appearance: none;
+                    
+                                                                                                }
+                                                                                                select option{
+                                                                                                    background-color: #222222;
+                                                                                                }
+                                                                                            </style>
+                                    
+                                    
+                                    
+                                                                                            <script type="text/javascript">
+                                    
+                                                                                                function sendSelectedTransport() {
+
+                                                                                                    var selectedTransport = document.getElementById("transport-select");
+                                                                                                    var valueSelectedTransport = selectedTransport.value;
+                                                                                                    var textSelectedTransport = selectedTransport.options[selectedTransport.selectedIndex].text
+                    
+                                                                                                    swal(
+                                                                                                        {
+                                                                                                            title : "TRANSPORTE OFRECIDO",
+                    
+                                                                                                            text : "Se ha realizado correctamente la oferta de transporte" + "\n" + "\n" +
+                    
+                                                                                                                    "Detalle de oferta" + "\n" +
+                                                                                                                    "Transporte " + textSelectedTransport + "\n" +
+                                                                                                                    "ID Transporte " + valueSelectedTransport + "\n"+ "\n",
+                                                                                                            icon : "success",
+                                                                                                            buttons : false,
+                                                                                                            timer : 3000
+                                                                                                        }
+                                                                                                    ).then(
+                                                                                                        function() {
+                                                                                                            var url = "{% url 'transport_request' id_transaction=transaction.id_transaction id_product=transaction.id_product id_transport=0 %}";
+                                                                                                            document.location.href = url.replace("0", valueSelectedTransport);
+                                                                                                        }
+                                                                                                    );
+
+                                    
+                                                                                                };
+                                    
+                                                                                            </script>
+                                    
+                                                                                            <a class="btn btn-success btn-group-sm"
+                                                                                                type="submit"
+                                                                                                id="btn-offer-transport"
+                                                                                                onclick="sendSelectedTransport()">
+                                                                                                <span class="icon">
+                                                                                                    <i class="fa-solid fa-truck"></i>
+                                                                                                </span>
+                                                                                        
+                                                                                                <span class="btn-text">
+                                                                                                    Ofrecer transporte
+                                                                                                </span>
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </div>
+                
+                
+                                                                                </div>
+                
+                
+                                                                            </div>
+                
+                
+                
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                    {% endfor %}
+                {% endfor %}
+
+
+
+
+
+
+
+            </div>
+
+
+        </div>
+
+
+    
+
+    </div>
+</div>
+{% endif %}
+{% endblock %}

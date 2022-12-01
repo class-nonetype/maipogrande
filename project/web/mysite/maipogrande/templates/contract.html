@@ -1,0 +1,83 @@
+{% extends './layout.html' %}
+
+{% block content %}
+
+
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> <!-- 4 -->
+
+
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+
+            <hr class = "featurette-divider"
+                style = "padding-bottom: 30px; background-color: transparent;">
+    
+            <h1 class="display-6 text-title text-center">Contrato</h1>
+
+
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+                <hr class = "featurette-divider"
+                    style = "padding-bottom: 10%; background-color: transparent;">
+    
+                {% for contract in contracts %}
+
+                    <div class="table-responsive py-4">
+                        <table class="table table-striped">
+        
+                                
+                            <tbody>
+        
+                                <tr>
+                                    <div class="container-article">
+                                            
+                                        <div>
+        
+                                            <div class="card text-white bg-transparent mb-3" style="max-width: 100%; max-height : auto; border-radius: 40px;">
+
+                                                    
+                                                <div class="card-body">
+        
+                                                    <div class="row">
+
+                                                            
+                                                        <div class="col-sm">
+                                                            <h6 class="h6 text-start">
+                                                                Contrato {{ contract.id_contract }}
+
+                                                                <a href="{{ contract.document.url }}" style="text-decoration:none">{{ contract.document }}</a>
+                                                            </h6>
+                                                                
+        
+                                                            <hr class = "featurette-divider"
+                                                                style = "padding-top : 10px; padding-bottom: 10px; background-color: transparent;">
+        
+                                                        </div>
+        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                
+                                    </div>
+        
+                                </tr>
+        
+                            </tbody>
+        
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <hr class = "featurette-divider"
+        style = "padding-top : 50px; padding-bottom: 50px; background-color: transparent;">
+
+</div>
+
+{% endblock %}

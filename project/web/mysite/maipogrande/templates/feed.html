@@ -1,0 +1,348 @@
+{% extends './layout.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+
+    #searcher {
+		padding-top: 50px;
+		padding-bottom: 100px;
+	}
+    
+    
+</style>
+
+
+{% if request.user.type == 'CLIENTE EXTERNO' %}
+    {% if not user.is_superuser %}
+
+        {% if international_contract.contract_validity == 'SI' %}
+
+            <script>
+                    swal(
+                        {
+                            title: "CONTRATO INTERNACIONAL DISPONIBLE",
+                            text: "Hay un contrato internacional disponible, están a la venta las mejores frutas en calidad y precio." +  "\n" +
+                                "El precio de las publicaciones consideran:" +  "\n" +
+                                "1) Transporte" +  "\n" +
+                                "2) Impuestos aduaneros" +  "\n" +
+                                "3)\t Servicio" +  "\n" +
+                                "¿Deseas echar un vistazo?",
+                            icon: "info",
+                            buttons: true,
+                            })
+                            .then((willDelete) => {
+                            if (willDelete) {
+                                var url = "{% url 'international_contract_feed' %}";
+                                
+                                document.location.href = url;
+                            } else {
+                                return false;
+                            }
+                        }
+                    );
+            </script>
+
+        {% endif %}
+    {% endif %}
+
+
+{% endif %}
+
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags %}
+
+            {% if message.message == 'MENSAJE_DOCUMENTO_SUBIDO' %}
+            
+                <script>
+                    swal(
+                        {
+                            title : "Contrato subido",
+                            text : "El documento seleccionado ha sido subido correctamente",
+                            icon : "success",
+                        }
+                    );
+                </script>
+            {% endif %}
+
+            {% if message.message == 'MENSAJE_TRANSPORTE_OFRECIDO' %}
+            
+                <script>
+                    swal(
+                        {
+                            title : "Transporte ofrecido",
+                            text : "El transporte ingresado ha sido ofrecido correctamente",
+                            icon : "success",
+                        }
+                    );
+                </script>
+
+
+
+            {% endif %}
+        {% endif %}
+    
+    {% endfor %}
+{% endif %}
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> <!-- 4 -->
+
+
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+			<h1 class="display-6 text-title text-center">Publicaciones</h1>
+
+			<div class="p-3 bg-dark text-white">
+
+				<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="searcher" >
+					<form action="{% url 'search_product' %}" class="form-inline" method="get">
+		
+						<div class="input-group align-content-end" style="padding-left: 15%; padding-right: 15%;">
+		
+							<input name="search"
+								   type=""
+								   class="form-control bg-transparent text-white"
+								   placeholder="Ingresa un dato de algun producto"
+								   id="input-search">
+		
+							<button class="btn btn-success btn-group-sm" type="submit" id="btn-search">
+								<span class="icon">
+									<i class="fa-solid fa-search"></i>
+								</span>
+						
+								<span class="btn-text">
+									Buscar producto
+								</span>
+							</button>
+						</div>
+					</form>
+		
+				</div>
+			</div>
+		</div>
+
+        <hr class = "featurette-divider"
+            style = "padding-top : 10%; padding-bottom: 20px; background-color: transparent;">
+
+
+
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
+
+            {% if product_post.count > 0 %}
+
+                <div class="mb-2bg-white text-dark">
+                    
+                    {% if product_post.count == 1 %}
+                        <h1 class="display-6 text-start">{{ product_post.count }} Publicación disponible</h1>
+
+                    {% elif product_post.count > 1 %}
+                        <h1 class="display-6 text-start">{{ product_post.count }} Publicaciones disponibles</h1>
+
+                    {% endif %}
+                </div>
+
+            {% else %}
+                <div class="mb-2bg-white text-dark" style="padding-top: 100px; padding-bottom: 100px;">
+                    <h1 class="display-6 text-center">No hay publicaciones disponibles por el momento ☹</h1>
+                </div>
+            {% endif %}
+
+
+            <!-- publicaciones -->
+
+            {% for post in product_post %}
+
+                <div class="table-responsive py-4">
+                    <table class="table table-striped">
+
+                        
+                        <tbody>
+
+                            <tr>
+                                <div class="container-article">
+                                    
+                                    <div>
+                                        <h2 class ="h2" id="username" class="text-start text-light"><a href="{% url 'profile' post.user.username %}"></a></h2>
+
+
+                                        <div class="card text-white bg-dark mb-3" style="max-width: 100%; max-height : auto; border-radius: 40px;">
+                                            <hr class = "featurette-divider"
+                                                style = "padding-top : 10px; padding-bottom: 10px; background-color: transparent;">
+                                            <div class="card-header">
+                                                <i class="clock"></i>
+                                                <time data-time="#">{{ post.timestamp|naturaltime }}</time>
+                                                <br></br>
+                                                <h2 class="h2 text-start text-light">Producto <span class="text-muted">{{ post.title }}</span></h2>
+                                            </div>
+                                            
+                                            <div class="card-body">
+
+                                                <div class="row">
+                                                    <div class="col-sm">
+                                                        <div class="col-12">
+                                                            {% if post.image %}
+                                                                <img class="card-img img-fluid" src="{{ post.image.url }}" alt="" style="max-width : 600px; max-height : 300px; border-radius: 40px;">
+                                                            {% endif %}
+
+                                                            <form style="padding-top: 10px; padding-bottom: 20px">
+                                                                <a class="btn btn-outline-warning btn-md" href="{% url 'profile' post.user.username %}" role="button"  style="border-radius: 40px;">Ver perfil de {{ post.user.username }}</a>
+                                                            </form>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-sm">
+                                                        <h6 class="h6 text-start">Nombre del propietario <span class="text-muted"> {{ post.user.first_name }} {{ post.user.last_name }}</span></h6>
+                                                        <h6 class="h6 text-start">Precio <span class="text-muted"> $ {{ post.price }}CLP</span></h6>
+                                                        <h6 class="h6 text-start">Kilogramos disponibles <span class="text-muted">{{ post.quantity }}kg</span></h6>
+
+                                                        {% if post.quality == 1 %}
+                                                            <h6 class="h6 text-start">Calidad  <span class="text-muted">⭐</span></h6>
+
+                                                        {% elif post.quality == 2 %}
+                                                            <h6 class="h6 text-start">Calidad  <span class="text-muted">⭐⭐</span></h6>
+
+                                                        {% elif post.quality == 3 %}
+                                                            <h6 class="h6 text-start">Calidad  <span class="text-muted">⭐⭐⭐</span></h6>
+                                                        {% elif post.quality == 4 %}
+                                                            <h6 class="h6 text-start">Calidad  <span class="text-muted">⭐⭐⭐⭐</span></h6>
+                                                        
+                                                        {% elif post.quality == 5 %}
+                                                            <h6 class="h6 text-start">Calidad  <span class="text-muted">⭐⭐⭐⭐⭐</span></h6>
+                                                        
+                                                        {% endif %}
+                                                        <h6 class="h6 text-start">Tipo <span class="text-muted">{{ post.type_sale }}</span></h6>
+                                                        <h6 class="h6 text-start">Descripción <span class="text-muted">{{ post.description }}</span></h6>
+                                                        <hr class = "featurette-divider"
+                                                            style = "padding-top : 10px; padding-bottom: 30px; background-color: transparent;">
+                                                        <div class="d-flex flex-row-reverse">
+                                                            <form>
+
+                                                                {% if request.user.is_authenticated %}
+                                                                    {% if request.user.type == "CLIENTE INTERNO" or request.user.type == "CLIENTE EXTERNO"%}
+                                                                        {% if post.user.username == request.user.username %}
+                                                                            <button class="btn btn-outline-success btn-md px-2" 
+                                                                                    type="submit"
+                                                                                    formaction="{% url 'product_sale' id_product=post.id %}"
+                                                                                    style="border-radius: 40px;">
+                                                                                <span class="icon">
+                                                                                    <i class="fa-solid fa-eye"></i>
+                                                                                </span>
+                                                            
+                                                                                <span class="btn-text">
+                                                                                    Ver proceso de venta
+                                                                                </span>
+                                                                            </button>
+                                                                        {% else %}
+                                                                            
+                                                                            {% if post.quantity == 0 %}
+                                                                                <button class="btn btn-outline-success btn-md px-2" 
+                                                                                        type="submit"
+                                                                                        formaction="{% url 'product_sale' id_product=post.id %}"
+                                                                                        style="border-radius: 40px;"
+                                                                                        disabled>
+                                                                                    <span class="icon">
+                                                                                        <i class="fa-solid fa-dollar-sign"></i>
+                                                                                    </span>
+                                                                
+                                                                                    <span class="btn-text">
+                                                                                        Sin stock
+                                                                                    </span>
+                                                                                </button>
+                                                                            {% else %}
+
+                                                                                <button class="btn btn-outline-success btn-md px-2" 
+                                                                                        type="submit"
+                                                                                        formaction="{% url 'product_sale' id_product=post.id %}"
+                                                                                        style="border-radius: 40px;">
+                                                                                    <span class="icon">
+                                                                                        <i class="fa-solid fa-dollar-sign"></i>
+                                                                                    </span>
+                                                                
+                                                                                    <span class="btn-text">
+                                                                                        Comprar producto
+                                                                                    </span>
+                                                                                </button>
+
+                                                                            {% endif %}
+                                                                        {% endif %}
+                
+                                                                    {% elif request.user.type == "PRODUCTOR" %}
+                                                                        {% if post.user.username == request.user.username %}
+
+                                                                            <button class="btn btn-outline-success btn-md px-2" 
+                                                                                type="submit"
+                                                                                formaction="{% url 'product_sold' id_product=post.id %}"
+                                                                                style="border-radius: 40px;">
+                                                                                <span class="icon">
+                                                                                    <i class="fa-solid fa-eye"></i>
+                                                                                </span>
+                                                            
+                                                                                <span class="btn-text">
+                                                                                    Ver proceso de venta
+                                                                                </span>
+                                                                            </button>
+
+                                                                    
+                                                                        {% endif %}
+
+                                                                    {% elif request.user.type == "TRANSPORTISTA" %}
+
+                                                                        <button class="btn btn-outline-success btn-md px-2" 
+                                                                            type="submit"
+                                                                            formaction="{% url 'product_sold' id_product=post.id %}"
+                                                                            style="border-radius: 40px;">
+                                                                            <span class="icon">
+                                                                                <i class="fa-solid fa-eye"></i>
+                                                                            </span>
+                                                        
+                                                                            <span class="btn-text">
+                                                                                Ver proceso de venta
+                                                                            </span>
+                                                                        </button>
+
+                                                                    {% endif %}
+
+                                                                    
+
+                                                                {% endif %}
+                                                    
+                                                            </form>
+                                                            
+                                                        </div>
+
+                                                        <hr class = "featurette-divider"
+                                                            style = "padding-top : 10px; padding-bottom: 10px; background-color: transparent;">
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                </div>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,441 @@
+{% extends './layout.html' %}
+{% block content %}
+{% load humanize %}
+{% load static %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+    .card-profile {
+        padding-top : 10px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-12">
+        
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+			<h1 class="display-6 text-title text-center">Habilitar un nuevo contrato </h1>
+		</div>
+
+	</div>
+
+
+	<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="user-bank-account">
+		{% for contract in international_contract %}
+
+			<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="user-bank-account">
+				<span class="step-links">
+
+					<hr class = "featurette-divider"
+						style = "padding-top : 40px; padding-bottom: 20px; background-color: transparent;">
+
+					
+
+
+						
+
+					<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+						
+						
+
+
+						<h1 class="current display-6 text-center" id="available-account">Contrato {{ international_contract.number }} de {{ international_contract.paginator.num_pages }}</h1>
+
+						<div class="d-flex bd-highlight mb-3">
+
+							{% if international_contract.has_previous %}
+	
+								<div class="p-2 bd-highlight">
+
+									<button class="btn btn-outline-danger btn-md px-md-4" onclick="location.href='?page=1#international-contract'" type="button">
+										<i class="fa-solid fa-angle-double-left"></i>
+									</button>
+		
+		
+									<button class="btn btn-outline-danger btn-md px-md-4" onclick="location.href='?page={{ international_contract.previous_page_number }}#international-contract'" type="button">
+										<i class="fa-solid fa-angle-left"></i>
+									</button>
+									
+								</div>
+							{% endif %}
+
+
+
+
+							{% if international_contract.has_next %}
+
+								<div class="ms-auto p-2 bd-highlight">
+									<button class="btn btn-outline-danger btn-md px-md-4" onclick="location.href='?page={{ international_contract.next_page_number }}#international-contract'" type="button">
+										<i class="fa-solid fa-angle-right"></i>
+									</button>
+		
+									<button class="btn btn-outline-danger btn-md px-md-4" onclick="location.href='?page={{ international_contract.paginator.num_pages }}#international-contract'" type="button">
+										<i class="fa-solid fa-angle-double-right"></i>
+									</button>
+								</div>
+
+	
+							{% endif %}
+	
+						</div>
+
+
+					</div>
+
+
+				</span>
+			</div>
+
+			<hr class = "featurette-divider"
+				style = "padding-top : 10px; padding-bottom: 10px; background-color: transparent;">
+
+
+
+			<div class="card" id="international-contract"  style="border-radius: 40px;">
+					
+				<div class="card-body">
+
+					<div class="row">
+						<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+							<legend id="bank-added">Contrato internacional</legend>
+							<div class = "form-group">
+								<fieldset id="international-contract-form" disabled>
+	
+									<hr class = "featurette-divider"
+										style = "padding-top : 20px; padding-bottom: 10px; background-color: transparent;">
+					
+													
+									<div class="mb-3">
+										<label for="id_international_contract" class="form-label">ID de contrato</label>
+										<input type="text" id="id_international_contract" class="form-control" placeholder="{{ contract.id }}">
+									</div>
+
+
+									<hr class = "featurette-divider"
+										style = "padding-top : 10px; padding-bottom: 10px; background-color: transparent;">
+					
+					
+
+									<div class="mb-3">
+										<label for="contract_term_international_contract" class="form-label">Fecha de validez de contrato</label>
+										<input type="text" id="contract_term_international_contract" class="form-control" placeholder=" {{ contract.contract_term }}">
+									</div>
+
+									<hr class = "featurette-divider"
+										style = "padding-top : 10px; padding-bottom: 10px; background-color: transparent;">
+					
+					
+
+									<div class="mb-3">
+										<label for="contract_closing_date_international_contract" class="form-label">Fecha de termino de contrato</label>
+										<input type="text" id="contract_closing_date_international_contract" class="form-control" placeholder=" {{ contract.contract_closing_date }}">
+									</div>
+
+									<hr class = "featurette-divider"
+										style = "padding-top : 10px; padding-bottom: 10px; background-color: transparent;">
+					
+					
+
+									<div class="mb-3">
+										<label for="contract_validity_international_bank" class="form-label">Vigencia de contrato</label>
+										<input type="text" id="contract_validity_international_bank" class="form-control" placeholder="{{ contract.contract_validity }}">
+									</div>
+
+								</fieldset>
+
+								<hr class = "featurette-divider"
+									style = "padding-top : 20px; padding-bottom: 15px; background-color: transparent;">
+			
+								<a class="btn btn-primary btn-danger btn-md px-5"
+									type = "submit"
+									href = "javascript:deleteInternationalContract('{% url 'delete_international_contract' id_contract=contract.id %}');"
+									id = "btn-delete-international-contract"
+									style="border-radius : 20px;">
+
+									<span class="icon">
+										<i class="fa-solid fa-trash"></i>
+									</span>
+							
+									<span class="btn-text">
+										Eliminar contrato
+									</span>
+								</a>
+
+								{% if contract.contract_validity == 'NO' %}
+
+									<a class="btn btn-primary btn-success btn-md px-5"
+										type = "submit"
+										href = "javascript:renewInternationalContract('{% url 'renew_international_contract' id_contract=contract.id %}');"
+										id = "btn-renew-international-contract"
+										style="border-radius : 20px;">
+
+										<span class="icon">
+											<i class="fa-solid fa-rotate"></i>
+										</span>
+								
+										<span class="btn-text">
+											Renovar contrato
+										</span>
+									</a>
+
+								{% elif contract.contract_validity == 'SI' %}
+
+									<a class="btn btn-primary btn-warning btn-md px-5"
+										type = "submit"
+										href = "javascript:revokeInternationalContract('{% url 'revoke_international_contract' id_contract=contract.id %}');"
+										id = "btn-renew-international-contract"
+										style="border-radius : 20px;">
+
+										<span class="icon">
+											<i class="fa-solid fa-cancel"></i>
+										</span>
+								
+										<span class="btn-text">
+											Revocar contrato
+										</span>
+									</a>
+
+
+								{% endif %}
+
+
+
+								<script>
+
+									function deleteInternationalContract (url){
+										
+										swal(
+												{
+													title: "¿Estás seguro de eliminar este contrato?",
+													text: "Una vez eliminada el contrato, no podrás recuperarlo",
+													icon: "warning",
+													buttons: true,
+													dangerMode: true,
+												}
+										).then((willDelete) => {
+											if (willDelete) {
+
+												swal(
+													{
+															title : "CONTRATO INTERNACIONAL ELIMINADO",
+															text : "Se ha eliminado correctamente el contrato" + "\n" + "\n" +
+
+																"Sera redireccionado, espere un momento...",
+															icon : "success",
+															button : false,
+													}
+												);
+
+												document.location.href = url;
+												
+												return true;
+
+											} else {
+
+												swal(
+													{
+														title : "OPERACIÓN CANCELADA",
+														text : "Se ha cancelado la operación de eliminar el contrato internacional" + "\n" + "\n",
+														icon : "info",
+														button: "Ok",
+													}
+												);
+												}
+
+												return false;
+											}
+										);
+
+									};
+
+
+									function revokeInternationalContract (url){
+										
+										swal(
+												{
+													title: "¿Estás seguro de revocar este contrato?",
+													icon: "warning",
+													buttons: true,
+													dangerMode: true,
+												}
+										).then((willDelete) => {
+											if (willDelete) {
+
+												swal(
+													{
+															title : "CONTRATO INTERNACIONAL REVOCADO",
+															text : "Se ha cancelado correctamente el contrato" + "\n" + "\n" +
+
+																"Sera redireccionado, espere un momento...",
+															icon : "success",
+															button : false,
+													}
+												);
+
+												document.location.href = url;
+												
+												return true;
+
+											} else {
+
+												swal(
+													{
+														title : "OPERACIÓN CANCELADA",
+														text : "Se ha cancelado la operación de revocar el contrato internacional" + "\n" + "\n",
+														icon : "info",
+														button: "Ok",
+													}
+												);
+												}
+
+												return false;
+											}
+										);
+
+									};
+
+
+									
+									function renewInternationalContract(url){
+										swal(
+											{
+												title : "CONTRATO INTERNACIONAL RENOVADO",
+												text : "Se ha renovado correctamente el contrato" + "\n" + "\n" +
+														"Sera redireccionado, espere un momento...",
+												icon : "success",
+												button : false,
+											}
+										);
+
+										document.location.href = url;
+												
+										return true;
+									}
+								</script> 
+
+
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+        {% endfor %}
+    </div>
+
+    <hr class = "featurette-divider"
+		style = "padding-top : 40px; padding-bottom: 80px; background-color: transparent;">
+
+
+    <div class="col-12" style="border-radius: 40px;">
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+
+			<hr class = "featurette-divider"
+				style = "padding-top : 10px; padding-bottom: 20px; background-color: transparent;">
+	
+
+			<h1 class="display-6 text-start">Añade un nuevo contrato internacional</h1>
+
+
+			<hr class = "featurette-divider"
+				style = "padding-bottom: 10px; background-color: transparent;">
+	
+
+			<div class="card bg-transparent">
+                
+				<div class="card-body">
+	
+					<div class="row" id="bank-form">
+						<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+	
+							<form action="" method="POST" enctype="multipart/form-data">
+								{% csrf_token %}
+	
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+	
+									<div class="table-responsive py-4">
+	
+										<table class="table table-striped">
+											
+											<tbody>
+						
+												<tr>
+													{{ international_contract_form.as_p }}
+													
+													<hr class = "featurette-divider"
+														style = "padding-top : 10px; padding-bottom: 20px; background-color: transparent;">
+	
+
+													<style>
+															select {
+																padding: 5px;
+																color: #222222;
+																font-size: 12px;
+																background: transparent;
+																-webkit-appearance: none;
+
+															}
+															select option{
+																background-color: #222222;
+															}
+													</style>
+
+													<div class="d-grid gap-2 col-6 mx-auto">
+	
+														<button class="btn btn-primary btn-danger btn-lg text-white" 
+																type="submit"
+																href="#"
+																id="btn-add-bank-account"
+																style="border-radius: 40px;">
+	
+															<span class="icon">
+																<i class="fa-solid fa-building-columns"></i>
+															</span>
+														
+															<span class="btn-text">
+																Añadir contrato internacional
+															</span>
+														</button>
+	
+													</div>
+	
+	
+	
+												</tr>
+											</tbody>
+	
+											<hr class = "featurette-divider"
+												id = "bank-account-end"
+												style = "padding-top : 10px; background-color: transparent;">
+	
+										</table>
+	
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+        
+
+    </div>
+
+
+
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,295 @@
+{% extends './layout.html' %}
+{% block content %}
+{% load humanize %}
+{% load static %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+    .card-profile {
+        padding-top : 10px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-12">
+        
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+
+
+
+			<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 bg-dark text-white">
+
+				{% if transactions.count == 0 %}
+					<div class="mb-2bg-white text-white" style="padding-top: 100px; padding-bottom: 100px;">
+						<h1 class="display-6 text-center">No hay transacciones realizadas por el momento ☹</h1>
+					</div>
+		
+				{% else %}
+
+
+					<hr class = "featurette-divider"
+						style = "padding-top : 5px; padding-bottom: 20px; background-color: transparent;">
+		
+					{% for product in transactions %}
+
+
+						<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="available-transaction">
+							
+							
+
+
+							<h1 class="current display-6 text-center" id="available-transactions">Transacción {{ transactions.number }} de {{ transactions.paginator.num_pages }}</h1>
+
+							<div class="d-flex bd-highlight mb-3">
+
+								{% if transactions.has_previous %}
+		
+									<div class="p-2 bd-highlight">
+
+										<button class="btn btn-primary btn-md px-md-4" onclick="location.href='?page=1'" type="button">
+											<i class="fa-solid fa-angle-double-left"></i>
+										</button>
+			
+			
+										<button class="btn btn-primary btn-md px-md-4" onclick="location.href='?page={{ transactions.previous_page_number }}'" type="button">
+											<i class="fa-solid fa-angle-left"></i>
+										</button>
+										
+									</div>
+								{% endif %}
+
+								{% if transactions.has_next %}
+
+									<div class="ms-auto p-2 bd-highlight">
+										<button class="btn btn-primary btn-md px-md-4" onclick="location.href='?page={{ transactions.next_page_number }}'" type="button">
+											<i class="fa-solid fa-angle-right"></i>
+										</button>
+			
+										<button class="btn btn-primary btn-md px-md-4" onclick="location.href='?page={{ transactions.paginator.num_pages }}'" type="button">
+											<i class="fa-solid fa-angle-double-right"></i>
+										</button>
+									</div>
+
+		
+								{% endif %}
+		
+							</div>
+
+							<hr class = "featurette-divider"
+								style = "padding-top : 5%; padding-bottom: 5%; background-color: transparent;">
+
+						</div>
+
+
+						<div class="card bg-dark">
+									
+								<div class="card-body">
+
+
+									<div class="row">
+										<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+
+																		
+											<div class="p-3 mb-2 bg-dark">
+
+												{% if product.status == "APROBADO" %}
+													<h1 class="display-6 text-start text-success">
+														Transacción {{ product.id_transaction }}
+														<a class="display-6 text-end link-warning"
+															id="view-product-post"
+															href="{% url 'view_product_post' product.id_product %}"
+															style="text-decoration:none">Ver publicación</a>
+													</h1>
+													<hr class = "featurette-divider"
+														style = "background-color: transparent;">
+									
+													<div class="progress">
+														<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100"></div>
+													</div>
+
+												{% elif product.status == "PENDIENTE" %}
+													<h1 class="display-6 text-start text-info">
+														Transacción {{ product.id_transaction }}
+														<a class="display-6 text-end link-warning"
+														id="view-product-post"
+														href="{% url 'view_product_post' product.id_product %}"
+														style="text-decoration:none">Ver publicación</a>
+													</h1>
+
+													<hr class = "featurette-divider"
+														style = "background-color: transparent;">
+
+													<div class="progress">
+														<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="100" aria-valuemax="100"></div>
+													</div>
+
+												{% elif product.status == "RECHAZADO" %}
+													<h1 class="display-6 text-start text-danger">
+														Transacción {{ product.id_transaction }}
+														<a class="display-6 text-end link-warning"
+														id="view-product-post"
+														href="{% url 'view_product_post' product.id_product %}"
+														style="text-decoration:none">Ver publicación</a>
+													</h1>
+													
+													<hr class = "featurette-divider"
+														style = "background-color: transparent;">
+													
+													<div class="progress">
+														<div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100"></div>
+													</div>
+													
+												{% endif %}
+												
+											</div>
+
+											<div class = "form-group">
+												<fieldset disabled>
+													<div class="mb-3 text-end">
+														<i class="clock"></i>
+														<time data-time="#">{{ product.timestamp|naturaltime }}</time>
+														<br></br>
+													</div>
+							
+
+													<div class="mb-3">
+														<label for="product" class="form-label">Producto </label>
+														<input type="text" id="product" class="form-control bg-transparent text-white" placeholder="{{ product.product }}">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="quantity" class="form-label">Cantidad (kg) </label>
+														<input type="text" id="quantity" class="form-control bg-transparent text-white" placeholder=" {{ product.quantity }}">
+													</div>
+
+													<div class="mb-3">
+														<label for="producer" class="form-label">Productor </label>
+														<input type="text" id="producer" class="form-control bg-transparent text-white" placeholder=" {{ product.producer }}">
+													</div>
+
+													<div class="mb-3">
+														<label for="client" class="form-label">Cliente </label>
+														<input type="text" id="client" class="form-control bg-transparent text-white" placeholder=" {{ product.client }}">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="transportation" class="form-label">Transportista </label>
+														<input type="text" id="transportation" class="form-control bg-transparent text-white" placeholder=" {{ product.transportist }}">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="price" class="form-label">Precio </label>
+														<input type="text" id="price" class="form-control bg-transparent text-white" placeholder=" {{ product.price }}">
+													</div>
+												
+													<div class="mb-3">
+														<label for="total" class="form-label">Total </label>
+														<input type="text" id="total" class="form-control bg-transparent text-white" placeholder=" {{ product.total }}">
+													</div>
+
+													<div class="mb-3">
+														<label for="transportation" class="form-label">Transporte encontrado </label>
+														<input type="text" id="transportation" class="form-control bg-transparent text-white" placeholder=" {{ product.transport_status }}">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="transport-type" class="form-label">Tipo de transporte </label>
+														<input type="text" id="transport-type" class="form-control bg-transparent text-white" placeholder=" {{ product.transport_type }}">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="patent" class="form-label">Patente del transporte </label>
+														<input type="text" id="patent" class="form-control bg-transparent text-white" placeholder=" {{ product.transport_patent }}">
+													</div>
+
+
+
+													<div class="mb-3">
+														<label for="size" class="form-label">Tamaño del transporte </label>
+														<input type="text" id="size" class="form-control bg-transparent text-white" placeholder=" {{ product.transport_size }}">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="capcity" class="form-label">Capacidad de peso del transporte </label>
+														<input type="text" id="capcity" class="form-control bg-transparent text-white" placeholder=" {{ product.transport_capacity }} kg">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="transportation" class="form-label">Patente del transporte </label>
+														<input type="text" id="transportation" class="form-control bg-transparent text-white" placeholder=" {{ product.transport_patent }}">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="refrigeracion" class="form-label">Refrigeracion</label>
+														<input type="text" id="refrigeracion" class="form-control bg-transparent text-white" placeholder=" {{ product.transport_refrigeration }}">
+													</div>
+
+
+													<div class="mb-3">
+														<label for="status" class="form-label">Estado  </label>
+														<input type="text" id="status" class="form-control bg-transparent text-white" placeholder=" {{ product.status }}">
+													</div>
+												</fieldset>
+
+												
+												
+												<hr class = "featurette-divider bg-transparent">
+
+												<div class="d-flex flex-row-reverse">
+
+
+													<button class="btn btn-outline-success btn-md px-2"
+															onclick="window.print();"
+															style="border-radius: 40px;"
+															id="btn-generate-contract">
+														<span class="icon">
+															<i class="fa-solid fa-file-pdf"></i>
+														</span>
+												
+														<span class="btn-text">
+															Generar transacción como PDF
+														</span>
+													</button>
+												</div>
+
+
+											</div>
+
+											<hr class = "featurette-divider bg-transparent">
+								
+										</div>
+									</div>
+								</div>
+						</div>
+
+					{% endfor %}
+				{% endif %}
+			</div>
+
+
+
+		</div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+

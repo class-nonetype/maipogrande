@@ -1,0 +1,590 @@
+{% extends './layout.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+
+    #searcher {
+		padding-top: 50px;
+		padding-bottom: 100px;
+	}
+    
+    
+</style>
+
+<script>
+
+    var countBankAccount= "{{ bank_account.count }}";
+    var userType = "{{ request.user.type }}";
+
+    if (userType == "CLIENTE EXTERNO"){
+        if (countBankAccount == "0") {
+            swal(
+                    {
+                        title: "ERROR - NO HAY CUENTA BANCARIA",
+                        text : "Usted no posee de una cuenta bancaria para realizar compras, por favor vincule una",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true
+                    }).then((willDelete) => {
+                        if (willDelete) {
+                            document.location.href = "{% url 'bank_account' %}";
+                        }
+                    }
+            );
+        }
+    } else {
+        if (userType == "CLIENTE INTERNO") {
+            if (countBankAccount == "0") {
+                swal(
+                        {
+                            title: "ERROR - NO HAY CUENTA BANCARIA",
+                            text : "Usted no posee de una cuenta bancaria para realizar compras, por favor vincule una",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true
+                        }).then((willDelete) => {
+                            if (willDelete) {
+                                document.location.href = "{% url 'bank_account' %}";
+                            }
+                        }
+                );
+            }
+        }
+    }
+
+
+
+</script>
+
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        {% if message.message == 'MENSAJE_SALDO_INSUFICIENTE' %}
+            <script>
+                swal(
+                    {
+                        title : "SALDO INSUFICIENTE",
+                        text : "No dispone del saldo necesario para poder efectuar esta compra" + "\n" +
+                                "Por favor, considerar que puede realizar recargas para poder comprar los productos",
+                        icon : "warning",
+                        timing : 3000
+                    }
+                );
+            </script>
+            
+        {% elif message.message == 'MENSAJE_TRANSACCION_REALIZADA' %}
+
+            <script>
+                swal(
+                    {
+                        title : "TRANSACCION REALIZADA",
+                        text : "Se ha efectuado correctamente la transaccion" + "\n" + "\n",
+                        icon : "success",
+                        buttons : false,
+                        timer : 3000
+                    }
+                );
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<div class="row" id="row-product-sale">
+
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> <!-- 4 -->
+
+
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius:40px;">
+			<h1 class="display-6 text-title text-center">Venta</h1>
+
+
+
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 bg-dark text-white">
+
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
+
+                    <div class="table-responsive py-4">
+                        <table class="table table-striped">
+                            
+                            <tbody>
+        
+                                <tr>
+                                    <div class="container-article">
+                                        
+                                        <div class="product-sale">
+        
+        
+                                            <div class="card text-white bg-dark mb-3" style="max-width: 100%; max-height : auto;">
+                                                <div class="card-header">
+                                                    <h2 class="h2 text-start text-light">Producto <span class="text-muted">{{ product_post.title }}</span></h2>
+                                                </div>
+                                                
+                                                <div class="card-body">
+        
+                                                    <div class="row">
+                                                        <div class="col-sm">
+                                                            <div class="col-12" >
+                                                                {% if product_post.image %}
+                                                                    <img class="card-img img-fluid" id="img-product" src="{{ product_post.image.url }}" alt="" style="max-width : 600px; max-height : 300px; border-radius: 40px;">
+                                                                {% endif %}
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-sm">
+                                                            <h6 class="h6 text-start">Publicado hace <span class="text-muted">
+                                                                <i class="clock"></i>
+                                                                <time data-time="#">{{ product_post.timestamp|naturaltime }}</time>
+                                                            </span></h6>
+
+                                                            <hr class = "featurette-divider">
+
+                                                            
+                                                            <div class="mb-3">
+
+
+                                                                <label class="form-label h6 text-start" for="input-seller">Nombre del vendedor</label>
+                                                                
+                                                                <input name="input-seller"
+                                                                        class="form-control bg-transparent text-white"
+                                                                        id="input-seller"
+                                                                        value="{{ product_post.user.first_name }} {{ product_post.user.last_name }}"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                            </div>
+
+
+                                                            <div class="mb-3">
+
+
+                                                                <label class="form-label h6 text-start" for="input-buyer">Nombre del comprador</label>
+                                                                
+                                                                <input name="input-buyer"
+                                                                        class="form-control bg-transparent text-white"
+                                                                        id="input-buyer"
+                                                                        value="{{ request.user.first_name }} {{ request.user.last_name }}"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                            </div>
+
+                                                            <div class="mb-3">
+
+
+                                                                <label class="form-label h6 text-start" for="input-type-sale">Tipo de venta</label>
+                                                                
+                                                                <input name="input-type-sale"
+                                                                        class="form-control bg-transparent text-white"
+                                                                        id="input-type-sale"
+                                                                        value="{{ product_post.type_sale }}"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                            </div>
+
+
+                                                            <div class="mb-3">
+                                                                <div class="bg-dark text-white" style="padding-top:20px; padding-bottom: 40px;">
+                                                                    <h1 class="display-6 text-center">Detalle</h1>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label class="form-label h6 text-start" for="input-price">Precio (kg)</label>
+                
+                                                                    <input name="input-price"
+                                                                        class="form-control bg-transparent text-white"
+
+                                                                        value="{{ product_post.price }}"
+                                                                        id="input-price"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                                </div>
+                                                                
+                                                                <div class="mb-3">
+                                                                    <label class="form-label h6 text-start" for="input-stock">Cantidad (kg) disponibles</label>
+                
+                                                                    <input name="input-stock"
+                                                                            class="form-control bg-transparent text-white"
+                                                                        value="{{ product_post.quantity }}"
+                                                                        id="input-stock"
+                                                                        disabled
+                                                                        style="text-align : end;">
+                                                                </div>
+        
+                                                                <div class="mb-3">
+
+
+                                                                    {% if product_post.quality == 1 %}
+                                                                        <label class="form-label h6 text-start" for="input-quality">Calidad del producto </label>
+                        
+                                                                        <input name="input-quality"
+                                                                                class="form-control bg-transparent text-white"
+                                                                                value="⭐"
+                                                                                id="input-quality"
+                                                                                readonly
+                                                                                style="text-align : center;">
+                                                                    {% elif product_post.quality == 2 %}
+
+                                                                        <label class="form-label h6 text-start" for="input-quality">Calidad del producto </label>
+                        
+                                                                        <input name="input-quality"
+                                                                                class="form-control bg-transparent text-white"
+                                                                                value="⭐⭐"
+                                                                                id="input-quality"
+                                                                                disabled
+                                                                                style="text-align : center;">
+            
+                                                                    {% elif product_post.quality == 3 %}
+                                                                        <label class="form-label h6 text-start" for="input-quality">Calidad del producto </label>
+                        
+                                                                        <input name="input-quality"
+                                                                                class="form-control bg-transparent text-white"
+                                                                                value="⭐⭐⭐"
+                                                                                id="input-quality"
+                                                                                disabled
+                                                                                style="text-align : center;">
+
+
+                                                                    {% elif product_post.quality == 4 %}
+                                                                        <label class="form-label h6 text-start" for="input-quality">Calidad del producto </label>
+                        
+                                                                        <input name="input-quality"
+                                                                                class="form-control bg-transparent text-white"
+                                                                                value="⭐⭐⭐⭐"
+                                                                                id="input-quality"
+                                                                                disabled
+                                                                                style="text-align : center;">
+                                                                    
+                                                                    {% elif product_post.quality == 5 %}
+                                                                        <label class="form-label h6 text-start" for="input-quality">Calidad del producto </label>
+                        
+                                                                        <input name="input-quality"
+                                                                                class="form-control bg-transparent text-white"
+                                                                                value="⭐⭐⭐⭐⭐"
+                                                                                id="input-quality"
+                                                                                disabled
+                                                                                style="text-align : center;">
+                                                                    
+                                                                    {% endif %}
+                                                                </div>
+        
+
+        
+                                                                <div class="mb-3">
+                                                                    <label class="form-label h6 text-start" for="input-quantity">Cantidad (kg) a comprar</label>
+                                                                    <input name="input-quantity"
+                                                                        type="number"
+                                                                        min="1"
+                                                                        max="{{ product_post.quantity }}"
+                                                                        class="form-control bg-transparent text-white"
+                                                                        placeholder="Ingresa la cantidad a comprar"
+                                                                        id="input-quantity"
+                                                                        onkeyup=getMinMaxQuantityValue(this)
+                                                                        onblur="getTotalToPay()"
+                                                                        oninput="getTotalToPay()"
+                                                                        onchange="getTotalToPay()"
+                                                                        style="text-align : end;">
+                                                                </div>
+
+                                                            </div>
+                                                            
+                                                            <!--    Metodo de pago -->
+                                                            <div class="mb-3">
+                                                                <div class="mb-3">
+                                                                    <div class="bg-dark text-white" style="padding-top:20px; padding-bottom: 40px;">
+                                                                        <h1 class="display-6 text-center" style="padding-top: 20px;">Metodo de pago</h1>
+                                                                    </div>
+
+
+
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label h6 text-start" for="bank-select">Cuenta bancaria</label>
+        
+                                                                        <select class="form-select bg-transparent text-white" id="bank-select" aria-label="Selecciona una cuenta bancaria" onchange="sendSelectedBank()">
+                                                                            <option disable selected value="">Selecciona un banco</option>
+                    
+                                                                                {% for bank in bank_account %}
+                                                                                
+                                                                                    <option value="{{ bank.id_bank_account }}" id="bank-option">
+                                                                                        
+                                                                                        {{ bank.bank_account_number}} {{ bank.bank_name }} - {{ bank.type_bank_account }}
+
+                                                                                    </option>
+
+                                                                                {% endfor %}
+
+
+                                                                        </select>
+                                                                        <style>
+                                                                            select {
+                                                                                padding: 5px;
+                                                                                color: #222222;
+                                                                                font-size: 12px;
+                                                                                background: transparent;
+                                                                                -webkit-appearance: none;
+
+                                                                            }
+                                                                            select option{
+                                                                                background-color: #222222;
+                                                                            }
+                                                                        </style>
+
+                                                                        <hr class = "featurette-divider"
+                                                                            style = "padding-top : 5px; background-color: transparent;">
+
+                                                                        <div class="mb-3">
+
+
+                                                                            <label class="form-label h6 text-start" for="bank-select">ID Cuenta bancaria</label>
+                                                                            
+                                                                            <input name="input-bank-id"
+                                                                                    class="form-select bg-transparent text-white" 
+                                                                                    id="input-bank-id"
+                                                                                    disabled
+                                                                                    style="text-align : end;">
+                                                                                
+                                                                        </div>
+
+
+                                                                        <script>
+                                                                            function sendSelectedBank() {
+                                                                                var selectedBank = document.getElementById("bank-select");
+                                                                                var valueSelectedBank = selectedBank.value;
+                
+                                                                                var textSelectedBank = selectedBank.options[selectedBank.selectedIndex].text;
+
+                                                                                var input_bank_id = document.getElementById('input-bank-id');
+                                                                                var input_bank_amount = document.getElementById('input-bank-amount');
+
+        
+                                                                                input_bank_id.value = valueSelectedBank;
+                                                                                //input_bank_amount.value = "{{ bank.bank_amount }}";
+                                                                                //input_bank_amount.replace('0', input_bank_id);
+
+                                                                                //input_bank_amount.value = valueSelectedBank;
+                
+                                                                            }
+                
+                                                                        </script>
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                            <!--    Total a pagar -->
+                                                            <div class="mb-3">
+                                                                <div class="mb-3">
+                                                                    <div class="bg-dark text-white">
+                                                                        <h1 class="display-6 text-center" style="padding-top: 20px; padding-bottom: 40px;">Total a pagar</h1>
+                                                                    </div>
+
+        
+                                                                    <div class="mb-3" onload="total.reset();">
+                                                                        <label class="form-label h6 text-start" for="input-quantity">Total</label>
+
+                                                                        <form id="total">
+                                                                            <input name="input-total text-end"
+                                                                                class="form-select bg-transparent text-white" 
+                                                                                id="input-total"
+                                                                                disabled
+                                                                                style="text-align : end;padding-top: 10px; padding-bottom: 20px;"">
+
+                                                                        </form>
+
+
+                                                                        <hr class = "featurette-divider bg-transparent">
+
+                                                                        <button class="btn btn-outline-success btn-md " 
+                                                                                type="submit"
+                                                                                id="btn-buy-product"
+                                                                                onclick="payProduct()"
+                                                                                style="border-radius: 40px;">
+                                                                                
+                                                                            <span class="icon">
+                                                                                <i class="fa-solid fa-dollar-sign"></i>
+                                                                            </span>
+                                                        
+                                                                            <span class="btn-text">
+                                                                                Comprar producto
+                                                                            </span>
+                                                                        </button>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+
+                                                            <script>
+                
+                                                                function payProduct() {
+
+                                                                    var buyerFullName = document.getElementById("input-buyer").value;
+                                                                    var sellerFullName = document.getElementById("input-seller").value;
+                                                                    var price = document.getElementById("input-price").value;
+                                                                    var availableStock = document.getElementById("input-stock").value;
+                                                                    var quantity = document.getElementById("input-quantity").value;
+                                                                    //var availableBankAmount = document.getElementById("input-bank-amount").value;
+                                                                    var availableBankID = document.getElementById("input-bank-id").value;
+
+                                                                    var typeSale = document.getElementById("input-type-sale").value;
+
+                                                                    var transaction = parseInt(price * quantity)
+
+                                                                    //
+                                                                    var total = document.getElementById("input-total").value;
+
+                                                                    var imgProduct = document.getElementById("img-product").value;
+
+                                                                    if (availableBankID === "" || quantity === ""){
+                                                                        swal(
+                                                                            {
+                                                                                title : "OPERACIÓN CANCELADA",
+                                                                                text : "Por favor, asegurese de que todos los campos esten completos",
+                                                                                icon : "warning",
+                                                                                buttons : false,
+                                                                                timer : 2500
+                                                                            }
+                                                                        );
+
+
+                                                                    } else {
+                                                                            
+                                                                            var url = "{% url 'generate_sales_transaction' id_bank_account=111 amount=222 id_product=333 quantity=444 id_producer=555 id_client=666 price=777 type_sale=888%}";
+                                                                        
+                                                                            url = url.replace('111', availableBankID);
+                                                                            url = url.replace('222', transaction);
+                                                                            url = url.replace('333', "{{ product_post.id }}");
+                                                                            url = url.replace('444', quantity);
+                                                                            url = url.replace('555', "{{ product_post.user.id }}");
+                                                                            url = url.replace('666', "{{ request.user.id }}");
+                                                                            url = url.replace('777', price);
+                                                                            url = url.replace('888', "{{ product_post.type_sale }}");
+
+
+
+
+
+                                                                            swal(
+                                                                                {
+                                                                                    title: "¿Deseas guardar la boleta?",
+                                                                                    icon: "info",
+                                                                                    buttons: true,
+                                                                                }
+                                                                            ).then((value) => {
+                                                                                if (value) {
+
+                                                                                    window.print();
+                                                                                    
+                                                                                } else {
+
+                                                                                }
+                                                                                return document.location.href = url;
+                                                                            }
+                                                                            );
+
+
+
+                                                                            
+
+                                                                            
+                                                                        }
+                                                                }
+
+                                                            </script>
+
+
+                                                            <script>
+                                                                function getMinMaxQuantityValue(el) {
+                                                                    if (el.value != "") {
+                                                                        if (parseInt(el.value) < parseInt(el.min)) {
+                                                                            el.value = el.min;
+                                                                        }
+                                                                        if (parseInt(el.value) > parseInt(el.max)) {
+                                                                            el.value = el.max;
+                                                                        }
+                                                                    }
+                                                                };
+                                                            </script>
+
+                                                            <script>
+                                                                function printProductSale(){
+                                                                    window.print();
+                                                                }
+
+                                                            </script>
+
+                                                            <script>
+
+                                                                function getTotalToPay(){
+                                                                    var quantity = document.getElementById("input-quantity").value;
+                                                                    var stock = document.getElementById("input-stock").value;
+                                                                    var price = document.getElementById("input-price").value;
+
+                                                                    // Comision
+                                                                    var _commission = price*(15/100)
+
+                                                                    // Impuestos por servicio
+                                                                    var _services = price*(15/100);
+
+                                                                    // Transporte
+
+                                                                    if (document.getElementById("input-type-sale").value === "INTERNACIONAL") {
+                                                                        var _transport = price*(20/100);
+                                                                    } else {
+                                                                        var _transport = price*(15/100);
+                                                                    }
+                                                                    
+
+                                                                    // 19% de IVA
+                                                                    var _iva = price*(19/100);
+
+                                                                    // Derechos aduaneros 6% del total
+                                                                    var _customsDuty = price*(6/100);
+
+                                                                    // Total de impuestos de aduana
+                                                                    var _totalCustomsTax = _iva+_customsDuty;
+
+                                                                    var _total = _commission+_services+_transport+_totalCustomsTax
+
+                                                                    var total = parseInt((quantity * price) + _total);
+        
+                                                                    var input_total = document.getElementById('input-total');
+
+                                                                    input_total.value = total;
+        
+                                                                };
+                                                            </script>
+
+                                                            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

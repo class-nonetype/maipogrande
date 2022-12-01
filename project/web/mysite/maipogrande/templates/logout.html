@@ -1,0 +1,41 @@
+{% extends './layout.html' %}
+
+{% block content %}
+
+
+
+<div class="col-sm-12 col-md-12 col-lg-4 col-xl-12">
+    
+    <div class="row">
+
+        <div class="col-12">
+    
+            <div class="p-3 mb-2 bg-black text-white" style="border-radius: 40px;">
+                <h1 class="display-6 text-title text-center">Sesión finalizada</h1>
+
+                <script>
+                    swal(
+                        {
+                            text : "Se ha cerrado la sesión",
+                            buttons : false
+                        }
+                    ).then(
+                        function() {
+                            var url = "{% url 'home' %}";
+							document.location.href = url;
+                        }
+                    );
+                </script>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <hr class = "featurette-divider"
+        style = "padding-top : 50px; padding-bottom: 50px; background-color: transparent;">
+
+</div>
+
+{% endblock %}

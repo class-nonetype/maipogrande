@@ -1,0 +1,262 @@
+{% extends './layout.html' %}
+{% block content %}
+{% load humanize %}
+{% load static %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+    .card-profile {
+        padding-top : 10px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-12">
+        
+
+		<div class="p-3 mb-2 bg-dark text-white">
+
+			{% if request.user.type == "PRODUCTOR" %}
+				<h1 class="display-6 text-title text-center">MiVenta</h1>
+			
+			{% elif request.user.type == "CLIENTE EXTERNO" or request.user.type == "CLIENTE INTERNO"%}
+				<h1 class="display-6 text-title text-center">MiCompra</h1>
+			{% endif %}
+
+
+			<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 bg-dark text-white">
+
+
+				<div class="p-3 bg-dark text-white">
+
+					<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="searcher" >
+						<form action="{% url 'search_purchased_product' %}" class="form-inline" method="get">
+			
+							<div class="input-group align-content-end" style="padding-left: 15%; padding-right: 15%;">
+			
+								<input name="search"
+									type=""
+									class="form-control bg-transparent text-white"
+									placeholder="Ingresa alguna transacción de un producto que hayas realizado"
+									id="input-search">
+			
+								<button class="btn btn-success btn-group-sm" type="submit" id="btn-search">
+									<span class="icon">
+										<i class="fa-solid fa-search"></i>
+									</span>
+							
+									<span class="btn-text">
+										Buscar transacción
+									</span>
+								</button>
+							</div>
+						</form>
+			
+					</div>
+				</div>
+
+				<hr class = "featurette-divider"
+					style = "padding-top : 10px; padding-bottom: 20px; background-color: transparent;">
+	
+
+				{% if query %}
+
+					{% if results.count > 0 %}
+
+						<div class="mb-2bg-white text-dark" style="padding-top: 100px; padding-bottom: 100px;">
+							
+							{% if results.count == 1 %}
+								<h1 class="display-6 text-start">{{ results.count }} Resultado encontrado</h1>
+				
+							{% elif results.count > 1 %}
+								<h1 class="display-6 text-start">{{ results.count }} Resultados encontrados</h1>
+				
+							{% endif %}
+						</div>
+			
+					{% else %}
+
+						<div class="mb-2bg-white text-white" style="padding-top: 100px; padding-bottom: 100px;">
+							<h1 class="display-6 text-center">No hay transacciones realizadas por el momento ☹</h1>
+						</div>
+
+					{% endif %}
+
+				{% endif %}
+
+				{% for product in results %}
+					<div class="card bg-dark">
+									
+						<div class="card-body">
+
+
+							<div class="row">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+
+																
+									<div class="p-3 mb-2 bg-dark">
+
+										{% if product.status == "APROBADO" %}
+											<h1 class="display-6 text-end text-success">Transacción {{ product.id_transaction }}</h1>
+											<div class="progress">
+												<div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100"></div>
+											</div>
+										{% elif product.status == "PENDIENTE" %}
+											<h1 class="display-6 text-end text-info">Transacción {{ product.id_transaction }}</h1>
+
+											<div class="progress">
+												<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="100" aria-valuemax="100"></div>
+											</div>
+										{% elif product.status == "RECHAZADO" %}
+											<h1 class="display-6 text-end text-danger">Transacción {{ product.id_transaction }}</h1>
+											<div class="progress">
+												<div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100"></div>
+											</div>
+										{% endif %}
+									</div>
+
+									<div class = "form-group">
+										<fieldset disabled>
+											<div class="mb-3 text-end">
+												<i class="clock"></i>
+												<time data-time="#">{{ product.timestamp|naturaltime }}</time>
+												<br></br>
+											</div>
+											
+											<div class="mb-3">
+												<label for="product" class="form-label">Producto </label>
+												<input type="text" id="product" class="form-control bg-transparent text-white" placeholder="{{ product.product }}">
+											</div>
+
+
+											<div class="mb-3">
+												<label for="quantity" class="form-label">Cantidad (kg) </label>
+												<input type="text" id="quantity" class="form-control bg-transparent text-white" placeholder=" {{ product.quantity }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="producer" class="form-label">Productor </label>
+												<input type="text" id="producer" class="form-control bg-transparent text-white" placeholder=" {{ product.producer }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="client" class="form-label">Cliente </label>
+												<input type="text" id="client" class="form-control bg-transparent text-white" placeholder=" {{ product.client }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="price" class="form-label">Precio </label>
+												<input type="text" id="price" class="form-control bg-transparent text-white" placeholder=" {{ product.price }}">
+											</div>
+										
+											<div class="mb-3">
+												<label for="total" class="form-label">Total </label>
+												<input type="text" id="total" class="form-control bg-transparent text-white" placeholder=" {{ product.total }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="transportation" class="form-label">Transporte encontrado </label>
+												<input type="text" id="transportation" class="form-control bg-transparent text-white" placeholder=" {{ product.transportation }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="status" class="form-label">Estado  </label>
+												<input type="text" id="status" class="form-control bg-transparent text-white" placeholder=" {{ product.status }}">
+											</div>
+										</fieldset>
+
+									</div>
+
+									<hr class = "featurette-divider bg-transparent">
+
+
+
+									{% if request.user.type == 'TRANSPORTISTA' %}
+										{% if product.status != "APROBADO" %}
+
+											<div class="d-flex flex-row-reverse">
+												<a class="btn btn-outline-success btn-md px-2"
+														href="{% url 'offer_transport' id_transaction=product.id_transaction id_product=product.id_product %}"
+														style="border-radius: 40px;">
+													<span class="icon">
+														<i class="fa-solid fa-truck"></i>
+													</span>
+								
+													<span class="btn-text">
+														Ofrecer transporte
+													</span>
+												</a>
+											</div>
+										{% endif %}
+						
+									{% elif request.user.type == 'CLIENTE EXTERNO' or request.user.type == 'CLIENTE INTERNO' %}
+
+										{% if product.status == 'APROBADO' %}
+											<hr class = "featurette-divider bg-transparent">
+
+											<div class="d-flex flex-row-reverse">
+
+												<a class="btn btn-outline-success btn-md px-2"
+														href="{% url 'order_tracking' id_transaction=product.id_transaction id_product=product.id_product %}"
+														style="border-radius: 40px;">
+													<span class="icon">
+														<i class="fa-solid fa-truck-fast"></i>
+													</span>
+								
+													<span class="btn-text">
+														Hacer seguimiento
+													</span>
+												</a>
+											</div>
+										{% endif %}
+
+										{% elif request.user.type == 'PRODUCTOR' %}
+
+											{% if product.status == 'APROBADO' %}
+												<hr class = "featurette-divider bg-transparent">
+
+												<div class="d-flex flex-row-reverse">
+
+													<a class="btn btn-outline-success btn-md px-2"
+															href="{% url 'order_tracking' id_transaction=product.id_transaction id_product=product.id_product %}"
+															style="border-radius: 40px;">
+														<span class="icon">
+															<i class="fa-solid fa-truck-fast"></i>
+														</span>
+									
+														<span class="btn-text">
+															Hacer seguimiento
+														</span>
+													</a>
+												</div>
+											{% endif %}
+
+									{% endif %}
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+				{% endfor %}
+
+			</div>
+
+
+
+		</div>
+
+
+    </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,226 @@
+{% extends './layout.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+
+    #searcher {
+		padding-top: 50px;
+		padding-bottom: 100px;
+	}
+    
+    
+</style>
+
+
+<div class="row">
+
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> <!-- 4 -->
+
+
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+			<h1 class="display-6 text-title text-center">Orden</h1>
+
+            <hr class = "featurette-divider"
+            style = "padding-top : 10px; padding-bottom: 20px; background-color: transparent;">
+
+
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
+
+                <!-- transacciones, estado de transacciones -->
+                {% for transaction_info in transactions %}
+                    {% for transaction in transaction_status %}
+
+                        <div class="table-responsive py-4">
+                            <table class="table table-striped">
+                                
+                                <tbody>
+
+                                    <tr>
+                                        <div class="container-article">
+                                            
+                                            <div>
+                                                <div class="card text-white bg-dark mb-3" style="max-width: 100%; max-height : auto; border-radius: 40px;">
+                                                    <div class="card-header">
+
+
+
+                                                        <hr class = "featurette-divider"
+                                                            style = "padding-top : 10px; padding-bottom: 20px; background-color: transparent;">
+                                                        {% if transaction.status == "PEDIDO AUN NO PROCESADO" %}
+                                                            <h2 class="h2 text-start text-light"> <span class="text-light">{{ transaction.status }}</span></h2>
+
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-light" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="15" aria-valuemax="100"></div>
+                                                            </div>
+                                                        {% elif transaction.status == "PEDIDO PROCESADO"%}
+                                                            <h2 class="h2 text-start text-light"> <span class="text-warning">{{ transaction.status }}</span></h2>
+
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="25" aria-valuemax="100"></div>
+                                                            </div>
+
+                                                        {% elif transaction.status == "EN TRANSITO"%}
+                                                            <h2 class="h2 text-start text-light">PEDIDO  <span class="text-info">{{ transaction.status }}</span></h2>
+
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-info" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="65" aria-valuemax="100"></div>
+                                                            </div>
+                                                        
+                                                        {% elif transaction.status == "PEDIDO ENTREGADO"%}
+                                                            <h2 class="h2 text-start text-light"> <span class="text-success">{{ transaction.status }}</span></h2>
+
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100"></div>
+                                                            </div>
+
+
+                                                        {% endif %}
+
+
+
+                                                        <hr class = "featurette-divider"
+                                                            style = "padding-top : 5px; padding-bottom: 10px; background-color: transparent;">
+                                                    </div>
+                                                    
+                                                    <div class="card-body">
+
+                                                        <div class="row">
+
+
+                                                            <div class="col-sm">
+                                                                <h6 class="h6 text-start">Nombre del cliente <span class="text-muted"> {{ transaction.client }}</span></h6>
+                                                                <h6 class="h6 text-start">Nombre del productor <span class="text-muted"> {{ transaction.producer }}</span></h6>
+                                                                <h6 class="h6 text-start">Nombre del transportista <span class="text-muted"> {{ transaction.transportist }}</span></h6>
+                                                                <h6 class="h6 text-start">Numero de seguimiento  #<span class="text-muted">{{ transaction.tracking_number }}</span></h6>
+                                                                
+                                                                <h6 class="h6 text-start">Transporte<span class="text-muted">
+                                                                    {{ transaction_info.transport_type }} {{ transaction_info.transport_patent }}</span></h6>
+                                                            </div>
+
+
+
+
+
+
+                                                            {% if request.user.type == 'TRANSPORTISTA' %}   
+                                                                <div class="d-flex justify-content-end" style="padding-bottom: 15px;">
+                                                                    <!-- <div class="d-flex flex-row-reverse"> -->
+                            
+                            
+                                                                        {% if transaction.status == 'PEDIDO AUN NO PROCESADO' %}
+                                                                    
+                                                                            <form class="d-flex px-1">
+                                                                                <a class="btn btn-primary btn-warning btn-md px-4"
+                                                                                    type="submit"
+                                                                                    id="btn-change-transaction-status"
+                                                                                    style="border-radius: 40px;"
+                                                                                    
+                                                                                    href="{% url 'switch_to_order_tracking_status_1' id_product=transaction_info.id_product id_transaction=transaction.id_transaction%}">
+                                                                                    
+                                                                                    <span class="icon">
+                                                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                                                    </span>
+                            
+                                                                                    <span class="btn-text">
+                                                                                        Cambiar a orden procesado
+                                                                                    </span>
+                                                                                </a>
+                                                                            </form>
+                            
+                                                                        {% endif %}
+                            
+                                                                        {% if transaction.status == 'PEDIDO PROCESADO' %}
+                                                                            <form class="d-flex px-1">
+                                                                                <a class="btn btn-primary btn-info btn-md px-4"
+                                                                                    type="submit"
+                                                                                    id="btn-change-transaction-status"
+                                                                                    style="border-radius: 40px;"
+                                                                                    href="{% url 'switch_to_order_tracking_status_2' id_product=transaction_info.id_product id_transaction=transaction.id_transaction%}">
+                                                                                    <span class="icon">
+                                                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                                                    </span>
+                            
+                                                                                    <span class="btn-text">
+                                                                                        Cambiar a orden en transito
+                                                                                    </span>
+                                                                                </a>
+                                                                            </form>
+                                                                        {% endif %}
+                                                                    
+                                                                        {% if transaction.status == 'EN TRANSITO' %}
+                                                                            <form class="d-flex px-1">
+                                                                                <a class="btn btn-primary btn-success btn-md px-4"
+                                                                                    type="submit"
+                                                                                    id="btn-change-transaction-status"
+                                                                                    style="border-radius: 40px;"
+                                                                                    href="{% url 'switch_to_order_tracking_status_3' id_product=transaction_info.id_product id_transaction=transaction.id_transaction%}">
+
+                                                                                    <span class="icon">
+                                                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                                                    </span>
+                            
+                                                                                    <span class="btn-text">
+                                                                                        Cambiar a orden entregado
+                                                                                    </span>
+                                                                                </a>
+                                                                            </form>
+                                                                        {% endif %}
+
+                                                                        {% if transaction.status == 'PEDIDO ENTREGADO' %}
+                                                                            <form class="d-flex px-1">
+                                                                                <a class="btn btn-primary btn btn-md px-4"
+                                                                                    type="submit"
+                                                                                    id="btn-change-transaction-status"
+                                                                                    style="border-radius: 40px;"
+                                                                                    href="{% url 'switch_to_order_tracking_status_0' id_product=transaction_info.id_product id_transaction=transaction.id_transaction%}">
+
+                                                                                    <span class="icon">
+                                                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                                                    </span>
+                            
+                                                                                    <span class="btn-text">
+                                                                                        Reiniciar estado
+                                                                                    </span>
+                                                                                </a>
+                                                                            </form>
+                                                                        {% endif %}
+                                                                </div>
+                                                            
+
+
+                                                            {% endif %}
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                        </div>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+
+		</div>
+
+
+
+    </div>
+</div>
+
+
+{% endblock %}

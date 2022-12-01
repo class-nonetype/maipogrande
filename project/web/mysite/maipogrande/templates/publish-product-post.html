@@ -1,0 +1,157 @@
+{% extends './layout.html' %}
+
+{% block content %}
+
+{% load humanize %}
+
+{% load static %}
+
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+    
+    .card-profile {
+        padding-top : 10px;
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+
+
+<div class="row">
+
+	<div class="col-12">
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+			<h1 class="display-6 text-title text-center">Crea una nueva publicación de producto</h1>
+
+			<div class="card bg-transparent" style="border-radius: 40px;">
+                
+				<div class="card-body">
+	
+					<div class="row">
+						<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+							<legend></legend>
+							<form action="" method="POST" enctype="multipart/form-data">
+	
+								{% csrf_token %}
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+									<div class="table-responsive py-4">
+										<table class="table table-striped">
+											<tbody>
+						
+												<tr>
+													{{ product_post_form.as_p }}
+	
+	
+	
+						
+													<hr class = "featurette-divider"
+														style = "padding-top : 2px; background-color: transparent;">
+		
+													<div class="d-grid gap-2 col-6 mx-auto">
+														<button class="btn btn-primary btn-danger btn-lg text-white"
+																type="submit"
+																onclick="messageProductCreated()"
+																id="btn-post">
+															<span class="icon" >
+																<i class="fa-solid fa-circle-plus"></i>
+															</span>
+													
+															<span class="btn-text">
+																Publicar producto
+															</span>
+														</button>
+	
+													</div>
+	
+													{% if user.country == 'CL' %}
+														<script>
+															var selectTypeSale = document.getElementById("select-type-sale");
+															selectTypeSale.value = 'NACIONAL';
+														</script>
+													{% else %}
+														<script>
+															var selectTypeSale = document.getElementById("select-type-sale");
+															selectTypeSale.value = 'INTERNACIONAL';
+														</script>
+	
+													{% endif %}
+	
+	
+													<hr class = "featurette-divider"
+														style = "padding-top : 10px; background-color: transparent;">
+	
+	
+													<script>
+														function messageProductCreated(){
+															var ownerFullName = document.getElementById("owner-full-name").value;
+															var productTitle = document.getElementById("product-title").value;
+															var productDescription = document.getElementById("product-description").value;
+															var productPrice = document.getElementById("product-price").value;
+															var productQuantity = document.getElementById("product-quantity").value;
+		
+															if (productTitle !== ""){
+																
+																if (productPrice !== ""){
+																	
+																	if (productQuantity !== ""){
+																		swal(
+																			{
+																				title : "PUBLICACION DE PRODUCTO AÑADIDA",
+																				text : "Se ha añadido correctamente el producto" + "\n" + "\n" +
+																						"Nombre completo del titular " + ownerFullName + "\n" +
+																						"Titulo del producto " + productTitle + "\n" +
+																						"Descripcion del producto " + productDescription + "\n" +
+																						"Precio del producto " + productPrice + "\n" + "\n" +
+																						"Stock disponible del producto " + productQuantity + "\n" + "\n" +
+																						"Será redireccionado, espere un momento...",
+																				icon : "success",
+																				button : false,
+																			}
+																		);
+	
+																		var url = "{% url 'feed' %}";
+																		document.location.href = url;
+	
+																		return true;
+	
+																	}
+																}
+															} else {
+																var url = "{% url 'feed' %}";
+																document.location.href = url;
+	
+																return true;
+															}
+														};
+													</script>
+	
+												</tr>
+	
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+		</div>
+
+
+    </div>
+</div>
+{% endblock %}

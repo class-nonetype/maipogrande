@@ -1,0 +1,200 @@
+{% extends './layout.html' %}
+{% block content %}
+{% load humanize %}
+{% load static %}
+
+<style>
+
+    .text-title {
+        padding-top : 60px;
+        padding-bottom: 100px;
+    }
+	#searcher {
+		padding-top: 50px;
+		padding-bottom: 100px;
+	}
+    
+</style>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+		<div class="p-3 mb-2 bg-dark text-white" style="border-radius: 40px;">
+			<h1 class="display-6 text-title text-center">Estado de solicitud</h1>
+
+			<div class="p-3 bg-dark text-white">
+
+				<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="searcher" >
+					<form action="{% url 'search_product_request' %}" class="form-inline" method="get">
+		
+						<div class="input-group align-content-end" style="padding-left: 15%; padding-right: 15%;">
+		
+							<input name="search"
+								   type=""
+								   class="form-control bg-transparent text-white"
+								   placeholder="Ingresa alguna solicitud de un producto"
+								   id="input-search">
+		
+							<button class="btn btn-success btn-group-sm"
+									type="submit"
+									id="btn-search">
+								<span class="icon">
+									<i class="fa-solid fa-search"></i>
+								</span>
+						
+								<span class="btn-text">
+									Buscar producto
+								</span>
+							</button>
+						</div>
+					</form>
+		
+				</div>
+			</div>
+
+
+			{% if query %}
+
+				{% if results.count > 0 %}
+
+					<div class="mb-2bg-white text-white" style="padding-top: 100px; padding-bottom: 100px;">
+						
+						{% if results.count == 1 %}
+
+							<h1 class="display-6 text-start">{{ results.count }} Solicitud encontrada</h1>
+			
+						{% elif results.count > 1 %}
+
+							<h1 class="display-6 text-start">{{ results.count }} Solicitudes encontradas</h1>
+			
+						{% endif %}
+					</div>
+
+				{% else %}
+
+					<div class="mb-2bg-white text-white" style="padding-top: 100px; padding-bottom: 100px;">
+						<h1 class="display-6 text-center">No hay solicitudes disponibles por el momento ☹</h1>
+					</div>
+
+				{% endif %}
+			{% endif %}
+
+        
+        	{% for product_request in results %}
+
+				<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+					<div class="card bg-transparent">
+							
+						<div class="card-body">
+
+							<div class="row col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+									<form>
+										<fieldset disabled>
+											<div class="mb-3">
+												<label for="id_offered_product" class="form-label">ID Solicitud</label>
+												<input type="text" id="id_offered_product" class="form-control bg-transparent text-white" placeholder="{{ product_request.id_offered_product }}">
+											</div>
+
+
+											<div class="mb-3">
+												<label for="offer" class="form-label">Producto ofrecido</label>
+												<input type="text" id="offer" class="form-control bg-transparent text-white" placeholder=" {{ product_request.offered_product }}">
+											</div>
+
+											<div class="mb-3">
+												<label for="status" class="form-label">Estado de solicitud de producto</label>
+
+												{% if product_request.status == "APROBADO" %}
+													<input type="text" id="status" class="form-control bg-transparent text-success" placeholder=" {{ product_request.status }}">
+
+												{% elif product_request.status == "RECHAZADO" %}
+													<input type="text" id="status" class="form-control bg-transparent text-danger" placeholder=" {{ product_request.status }}">
+
+												{% elif product_request.status == "PENDIENTE" %}
+													<input type="text" id="status" class="form-control bg-transparent text-info" placeholder=" {{ product_request.status }}">
+
+												{% endif %}
+											</div>
+
+
+											<div class="mb-3">
+												<label for="transport" class="form-label">Transporte ofrecido</label>
+												<input type="text" id="transport" class="form-control bg-transparent text-white" placeholder=" {{ product_request.offered_transport }}">
+											</div>
+								
+										</fieldset>
+
+										<div class="d-flex justify-content-end">
+										<!-- <div class="d-flex flex-row-reverse"> -->
+
+
+											{% if product_request.status != "APROBADO" %}
+										
+												<form class="d-flex px-1">
+													<a class="btn btn-primary btn-success btn-md px-4"
+														type="submit"
+														href="{% url 'accept_offered_product' product_request.id_offered_product %}"
+														id="btn-accept-product-offer"
+														style="border-radius: 40px;">
+														<span class="icon">
+															<i class="fa-solid fa-xmark"></i>
+														</span>
+
+														<span class="btn-text">
+															Aceptar oferta
+														</span>
+													</a>
+												</form>
+
+											{% endif %}
+
+											{% if req.status != "RECHAZADO" %}
+												<form class="d-flex px-1">
+
+													<a class="btn btn-primary btn-warning btn-md px-4"
+														type="submit"
+														href="{% url 'decline_offered_product' product_request.id_offered_product %}"
+														id="btn-decline-product-offer"
+														style="border-radius: 40px;">
+														<span class="icon">
+															<i class="fa-solid fa-xmark"></i>
+														</span>
+
+														<span class="btn-text">
+															Rechazar oferta
+														</span>
+													</a>
+												</form>
+											{% endif %}
+										
+
+											<form class="d-flex px-1">
+
+												<a class="btn btn-primary btn-danger btn-md px-4"
+													type="submit"
+													href="{% url 'delete_offered_product' product_request.id_offered_product %}"
+													id="btn-delete-product-offer"
+													style="border-radius: 40px;">
+													<span class="icon">
+														<i class="fa-solid fa-trash"></i>
+													</span>
+
+													<span class="btn-text">
+														Eliminar oferta
+													</span>
+												</a>
+											</form>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			{% endfor %}
+		</div>
+    </div>
+</div>
+{% endblock %}
