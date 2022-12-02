@@ -1,0 +1,5 @@
+Pillow
+xlsxwriter
+PyQt5
+pandas
+requests

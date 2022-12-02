@@ -1,9 +1,0 @@
-djangorestframework
-Django
-Pillow
-xlsxwriter
-selenium
-webdriver-manager
-PyQt5
-pandas
-requests
